@@ -35,7 +35,7 @@ def http_error(error):
         'code': 500,
         'error': error.message
     })
-    response.status_code = 400
+    response.status_code = 500
     return response
 
 
