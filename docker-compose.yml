@@ -1,0 +1,16 @@
+version: '2'
+services:
+  s1:
+    build: service1
+    ports:
+      - '5000'
+  s2:
+    build: service2
+    ports:
+      - '5000'
+  s3:
+    build: service3
+    ports:
+      - '5000'
+    depends_on:
+      - s1
