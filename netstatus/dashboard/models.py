@@ -15,7 +15,7 @@ class Flow(models.Model):
         (3, 'high'),
     )
 
-    date = models.DateField()
+    date = models.DateTimeField()
     source_ip = models.GenericIPAddressField()
     protocol = models.SmallIntegerField(choices=PROTOCOLS)
     source_port = models.IntegerField()
