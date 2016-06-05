@@ -33,3 +33,22 @@ docker run --name s2 -d -p 5002:5000 service2:latest
 docker run --name s3 --link s1:s1 --link s2:s2 -d -p 5003:5000 service3:latest 
 ```
 
+## NetStatus
+
+NetStatus to mini appka z restowym API. Służy głównie do prezentacji ruchu sieciowego.
+
+Wymagany Python 3.
+
+Zależności dociągamy poleceniem:
+
+```
+pip install -r requirements.txt
+```
+
+Uruchomienie:
+
+```
+./manage.py bower_install
+./manage.py migrate
+./manage.py runserver 8000
+```
