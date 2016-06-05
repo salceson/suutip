@@ -25,8 +25,8 @@
       <td>{{ ob.target_ip }}</td>
       <td>{{ ob.source_port }}</td>
       <td>{{ ob.target_port }}</td>
-      <td>{{ ob.protocol }}</td>
-      <td>{{ ob.risk }}</td>
+      <td>{{ ob.get_protocol_display }}</td>
+      <td>{{ ob.get_risk_display }}</td>
       <td>{{ ob.date }}</td>
     </tr>
   {% endfor %}
