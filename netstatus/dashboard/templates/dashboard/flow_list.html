@@ -9,7 +9,8 @@
 <table class="datatable table table-striped table-bordered">
   <thead>
     <tr>
-      <th>IP źródłowe</th>
+      <th>Adres IP źródłowy</th>
+      <th>Adres IP docelowy</th>
       <th>Port źródłowy</th>
       <th>Port docelowy</th>
       <th>Protokół</th>
@@ -21,6 +22,7 @@
   {% for ob in object_list %}
     <tr>
       <td>{{ ob.source_ip }}</td>
+      <td>{{ ob.target_ip }}</td>
       <td>{{ ob.source_port }}</td>
       <td>{{ ob.target_port }}</td>
       <td>{{ ob.protocol }}</td>
