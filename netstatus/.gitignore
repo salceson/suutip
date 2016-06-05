@@ -1,0 +1,5 @@
+# netstatus
+netstatus/secret.py
+db.sqlite3
+bower_components
+static
