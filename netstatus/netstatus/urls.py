@@ -1,31 +1,16 @@
-"""netstatus URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.9/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
 from django.conf.urls import url, include
 from django.contrib import admin
 
 from rest_framework import routers
 
-from dashboard.views import Overview, FlowViewSet
+from dashboard.views import Overview, FlowViewSet, FlowListView
 
 router = routers.DefaultRouter()
 router.register(r'flows', FlowViewSet)
 
 urlpatterns = [
-    # url(r'^$', Overview.as_view(), name='overview'),
-    # url(r'^flows/$', FlowListView.as_view(), name='flows'),
+    url(r'^$', Overview.as_view(), name='overview'),
+    url(r'^flows/$', FlowListView.as_view(), name='flow_list'),
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^rest/', include(router.urls)),
