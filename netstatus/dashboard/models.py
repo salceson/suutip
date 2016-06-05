@@ -9,8 +9,8 @@ class Flow(models.Model):
     )
 
     RISKS = (
-        (0, 'low'),
-        (1, 'neutral'),
+        (0, 'neutral'),
+        (1, 'low'),
         (2, 'moderate'),
         (3, 'high'),
     )

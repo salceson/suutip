@@ -47,7 +47,7 @@
       <div class="col-xs-3 col-sm-3 col-md-3">
         <div class="card-pf card-pf-aggregate-status card-pf-with-action">
           <h2 class="card-pf-title">
-            <span class="label label-success">Low risk: {{ low.count }}</span>
+            <span class="label label-success">Neutral: {{ neutral.count }}</span>
           </h2>
           <div class="card-pf-body">
             <p class="card-pf-aggregate-status-notifications">
@@ -59,7 +59,7 @@
       <div class="col-xs-3 col-sm-3 col-md-3">
         <div class="card-pf card-pf-aggregate-status card-pf-with-action">
           <h2 class="card-pf-title">
-            <span class="label label-info">Neutral risk: {{ neutral.count }}</span>
+            <span class="label label-info">Low risk: {{ low.count }}</span>
           </h2>
           <div class="card-pf-body">
             <p class="card-pf-aggregate-status-notifications">
@@ -95,13 +95,13 @@
     </div><!-- /row -->
   <div class="progress">
   {% if low.count %}
-  <div class="progress-bar progress-bar-success" style="width:{% widthratio low.count object_list.count 100 %}%">
-    <span class="sr-only"></span><span class="fa fa-check-circle-o"></span>
+  <div class="progress-bar progress-bar-success" style="width:{% widthratio neutral.count object_list.count 100 %}%">
+    <span class="sr-only"></span>Neutral  <span class="fa fa-check-circle-o"></span>
   </div>
   {% endif %}
   {% if neutral.count %}
-  <div class="progress-bar progress-bar-info" style="width:{% widthratio neutral.count object_list.count 100 %}%">
-    <span class="sr-only"></span>Neutral  <span class="fa fa-exclamation-circle"></span>
+  <div class="progress-bar progress-bar-info" style="width:{% widthratio low.count object_list.count 100 %}%">
+    <span class="sr-only"></span>Low  <span class="fa fa-exclamation-circle"></span>
   </div>
   {% endif %}
   {% if moderate.count %}
