@@ -137,3 +137,9 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# netstatus
+netstatus/netstatus/secret.py
+netstatus/db.sqlite3
+netstatus/bower_components
+netstatus/static
