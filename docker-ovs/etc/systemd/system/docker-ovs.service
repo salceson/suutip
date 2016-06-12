@@ -1,0 +1,17 @@
+[Unit]
+Description=Docker Open vSwitch network driver control server
+
+[Service]
+User=docker-ovs-control
+Group=docker-ovs-control
+WorkingDirectory=/home/docker-ovs-control/suutip/docker-ovs
+PIDFile=/run/docker-ovs-control/gunicorn.pid
+ExecStart=/home/docker-ovs-control/.virtualenvs/docker-ovs-control/bin/gunicorn \
+	--pid /run/docker-ovs-control/gunicorn.pid \
+	--bind unix:/run/docker-ovs-control/docker-ovs.sock \
+	plugin:application
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target
