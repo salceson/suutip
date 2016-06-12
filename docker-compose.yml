@@ -14,3 +14,7 @@ services:
       - '5000'
     depends_on:
       - s1
+      - s2
+networks:
+  default:
+    driver: ovs
