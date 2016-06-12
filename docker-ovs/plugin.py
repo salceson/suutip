@@ -1,4 +1,5 @@
-from docker_ovs.plugin import app
+from docker_ovs.plugin import app as application
 
 
-app.run()
+if __name__ == "__main__":
+    application.run()
