@@ -1,4 +1,4 @@
-from docker_ovs.central import app
+from docker_ovs.control import app as application
 
 
 if __name__ == "__main__":
