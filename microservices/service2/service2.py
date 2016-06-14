@@ -1,5 +1,6 @@
 import json
 from argparse import ArgumentParser
+from socket import gethostname
 
 from flask import Flask, jsonify, request
 from sqlalchemy.exc import DatabaseError
@@ -8,6 +9,29 @@ from database import db_session
 from models import User
 
 app = Flask(__name__)
+
+_hostname = gethostname()
+_requests_num = 0
+
+
+@app.before_request
+def increment_requests_num():
+    global _requests_num
+    _requests_num += 1
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return '', 404
+
+
+@app.route('/healthz')
+def healthz():
+    return jsonify({
+        'status': 'ok',
+        'node': _hostname,
+        'requests_num': _requests_num,
+    })
 
 
 class ApiError(Exception):

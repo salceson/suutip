@@ -1,11 +1,36 @@
 import re
 from argparse import ArgumentParser
+from socket import gethostname
 from subprocess import Popen, PIPE
 
 from flask import Flask, jsonify
 
+
 app = Flask(__name__)
+
 _ip_regex = re.compile('^(\d){1,3}\.(\d){1,3}\.(\d){1,3}\.(\d){1,3}$')
+_hostname = gethostname()
+_requests_num = 0
+
+
+@app.before_request
+def increment_requests_num():
+    global _requests_num
+    _requests_num += 1
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return '', 404
+
+
+@app.route('/healthz')
+def healthz():
+    return jsonify({
+        'status': 'ok',
+        'node': _hostname,
+        'requests_num': _requests_num,
+    })
 
 
 class InvalidIP(Exception):

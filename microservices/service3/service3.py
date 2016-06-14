@@ -1,6 +1,7 @@
 from __future__ import generators
 
 from argparse import ArgumentParser
+from socket import gethostname
 
 import requests
 from flask import Flask, jsonify
@@ -9,6 +10,29 @@ app = Flask(__name__)
 
 users_endpoint = ''
 ip_endpoint = ''
+
+_hostname = gethostname()
+_requests_num = 0
+
+
+@app.before_request
+def increment_requests_num():
+    global _requests_num
+    _requests_num += 1
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return '', 404
+
+
+@app.route('/healthz')
+def healthz():
+    return jsonify({
+        'status': 'ok',
+        'node': _hostname,
+        'requests_num': _requests_num,
+    })
 
 
 @app.route('/<name>')
