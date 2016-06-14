@@ -1,20 +1,20 @@
 version: '2'
 services:
-  s1:
-    build: service1
+  ipdiag:
+    build: ipdiag
     ports:
       - '5000'
-  s2:
-    build: service2
+  users:
+    build: users
     ports:
       - '5000'
-  s3:
-    build: service3
+  aggregate:
+    build: aggregate
     ports:
       - '5000'
-    depends_on:
-      - s1
-      - s2
+    links:
+      - ipdiag
+      - users
 networks:
   default:
     driver: ovs
