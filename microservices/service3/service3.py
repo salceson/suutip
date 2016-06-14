@@ -1,6 +1,6 @@
 from __future__ import generators
 
-from argparse import ArgumentParser
+from configargparse import ArgumentParser
 from socket import gethostname
 
 import requests
@@ -70,9 +70,9 @@ if __name__ == '__main__':
     parser.add_argument('--port', type=int, help='Specifies the port for the application.',
                         default=5000)
     parser.add_argument('-u', '--users', help='Specifies the address to the users service.',
-                        required=True)
+                        required=True, env_var='USERS_URL')
     parser.add_argument('-i', '--ip', help='Specifies the address to the ip service.',
-                        required=True)
+                        required=True, env_var='IPDIAG_URL')
     arguments = parser.parse_args()
     users_endpoint = arguments.users
     ip_endpoint = arguments.ip
