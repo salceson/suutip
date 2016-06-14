@@ -1,0 +1,116 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ipdiag
+spec:
+  ports:
+    - port: 80
+      targetPort: 5000
+      protocol: TCP
+  selector:
+    app: ipdiag
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users
+spec:
+  ports:
+    - port: 80
+      targetPort: 5000
+      protocol: TCP
+  selector:
+    app: users
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aggregate
+spec:
+  ports:
+    - port: 80
+      targetPort: 5000
+      protocol: TCP
+  selector:
+    app: aggregate
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: ipdiag
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: ipdiag
+    spec:
+      containers:
+        - name: ipdiag
+          image: mkwm/siuu-tip-ipdiag
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+              scheme: HTTP
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          ports:
+          - containerPort: 5000
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: users
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: users
+    spec:
+      containers:
+        - name: users
+          image: mkwm/siuu-tip-users
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+              scheme: HTTP
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 5000
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: aggregate
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: aggregate
+    spec:
+      containers:
+        - name: aggregate
+          image: mkwm/siuu-tip-aggregate
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+              scheme: HTTP
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 5000
+          env:
+            - name: IPDIAG_URL
+              value: http://ipdiag/
+            - name: USERS_URL
+              value: http://users/
+
