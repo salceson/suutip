@@ -1,7 +1,8 @@
 FROM python:2.7
 MAINTAINER "Michal Ciolczyk"
-COPY . /app
 WORKDIR /app
+ADD requirements.txt ./
 RUN pip install -r requirements.txt
+ADD *.py ./
 ENTRYPOINT ["python"]
-CMD ["service3.py", "--host", "0.0.0.0", "-u", "http://s2:5000", "-i", "http://s1:5000"]
+CMD ["aggregate.py", "--host", "0.0.0.0"]
