@@ -8,28 +8,134 @@
 
     <div class="row">
         <div class="col-lg-6 col-sm-12">
-            <div id="lineChart" class="line-chart-pf"></div>
+            <h3>Last 10 minutes</h3>
+        </div>
+
+        <div class="col-lg-6 col-sm-12">
+            <h3>New flows by hour</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-sm-12">
+            <div id="tenMinChart" class="line-chart-pf"></div>
             <script>
-                var lineChartDataColumns = [
-                    ['data1', 30, 200, 100, 400, 150, 250],
-                    ['data2', 50, 220, 310, 240, 115, 25],
-                    ['data3', 70, 100, 390, 295, 170, 220],
-                    ['data4', 10, 340, 30, 290, 35, 20],
-                    ['data5', 90, 150, 160, 165, 180, 5]
+                var tenMinChartDataColumns = [
+                    ['Low risk', 30, 200, 100, 400, 150, 250],
+                    ['Neutral', 50, 220, 310, 240, 115, 25],
+                    ['Moderate risk', 70, 100, 390, 295, 170, 220],
+                    ['High risk', 10, 340, 30, 290, 35, 20],
+                    ['Total', 80, 810, 550, 1200, 560, 560]
                 ];
 
                 var c3ChartDefaults = $().c3ChartDefaults();
-                var lineChartConfig = c3ChartDefaults.getDefaultLineConfig();
-                lineChartConfig.bindto = '#lineChart';
-                lineChartConfig.data = {
-                    columns: lineChartDataColumns,
-                    type: 'line'
+                var tenMinChartConfig = c3ChartDefaults.getDefaultLineConfig();
+                tenMinChartConfig.bindto = '#tenMinChart';
+                tenMinChartConfig.data = {
+                    columns: tenMinChartDataColumns,
+                    type: 'line',
+                    colors: {
+                        'Low risk': '#006e9c',
+                        'Neutral': '#3f9c35',
+                        'Moderate risk': '#ec7a08',
+                        'High risk': '#c00',
+                        'Total': '#999'
+                    }
                 };
-                var lineChart = c3.generate(lineChartConfig);
+                tenMinChartConfig.point = {
+                    show: false
+                };
+                var tenMinChart = c3.generate(tenMinChartConfig);
+            </script>
+
+        </div>
+
+        <div class="col-lg-6 col-sm-12">
+            <div id="avgDayChart" class="line-chart-pf"></div>
+            <script>
+                var avgDayChartDataColumns = [
+                    ['Low risk', 0, 0, 0, 0, 0, 2, 3, 4, 5, 7, 4, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    ['Neutral', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    ['Moderate risk', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    ['High risk', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    ['Total', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                ];
+
+                var c3ChartDefaults = $().c3ChartDefaults();
+                var avgDayChartConfig = c3ChartDefaults.getDefaultLineConfig();
+                avgDayChartConfig.bindto = '#avgDayChart';
+                avgDayChartConfig.data = {
+                    columns: avgDayChartDataColumns,
+                    type: 'line',
+                    colors: {
+                        'Low risk': '#006e9c',
+                        'Neutral': '#3f9c35',
+                        'Moderate risk': '#ec7a08',
+                        'High risk': '#c00',
+                        'Total': '#999'
+                    }
+                };
+                avgDayChartConfig.point = {
+                    show: false
+                };
+                var avgDayChart = c3.generate(avgDayChartConfig);
             </script>
 
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <h3>Full history</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div id="allChart" class="line-chart-pf"></div>
+            <script>
+                var allChartDataColumns = [
+                    ['x', '2016-06-19T15:00:00', '2016-06-19T15:20:00', '2016-06-19T15:25:00', '2016-06-20T01:07:00', '2016-06-20T03:00:00', '2016-06-20T05:00:00'],
+                    ['Low risk', 30, 200, 100, 400, 150, 250],
+                    ['Neutral', 50, 220, 310, 240, 115, 25],
+                    ['Moderate risk', 70, 100, 390, 295, 170, 220],
+                    ['High risk', 10, 340, 30, 290, 35, 20],
+                    ['Total', 80, 810, 550, 1200, 560, 560]
+                ];
+
+                var c3ChartDefaults = $().c3ChartDefaults();
+                var allChartConfig = c3ChartDefaults.getDefaultLineConfig();
+                allChartConfig.bindto = '#allChart';
+                allChartConfig.data = {
+                    x: 'x',
+                    xFormat: '%Y-%m-%dT%H:%M:%S',
+                    columns: allChartDataColumns,
+                    colors: {
+                        'Low risk': '#006e9c',
+                        'Neutral': '#3f9c35',
+                        'Moderate risk': '#ec7a08',
+                        'High risk': '#c00',
+                        'Total': '#999'
+                    }
+                };
+                allChartConfig.axis = {
+                    x: {
+                        type: 'timeseries',
+                        tick: {
+                            format: '%Y-%m-%d %H:%M',
+                            count: 8
+                        }
+                    }
+                };
+                allChartConfig.point = {
+                    show: false
+                };
+                var allChart = c3.generate(allChartConfig);
+            </script>
+
+        </div>
+    </div>
+
 
 </div>
 {% include 'dashboard/_footer.html' %}
