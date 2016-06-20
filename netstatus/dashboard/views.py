@@ -42,3 +42,8 @@ class FlowViewSet(viewsets.ModelViewSet):
 class FlowListView(ListView):
     model = Flow
     template_name = 'dashboard/flow_list.html'
+
+
+class Charts(ListView):
+    queryset = Flow.objects.all()
+    template_name='dashboard/charts.html'
