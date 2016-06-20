@@ -42,6 +42,14 @@
                         'Total': '#999'
                     }
                 };
+                tenMinChartConfig.axis = {
+                    y: {
+                        label: 'New flows / minute'
+                    },
+                    x: {
+                        label: 'Time'
+                    }
+                };
                 tenMinChartConfig.point = {
                     show: false
                 };
@@ -75,6 +83,14 @@
                         'Total': '#999'
                     }
                 };
+                avgDayChartConfig.axis = {
+                    y: {
+                        label: 'New flows'
+                    },
+                    x: {
+                        label: 'Hour of day'
+                    }
+                };
                 avgDayChartConfig.point = {
                     show: false
                 };
@@ -95,7 +111,7 @@
             <div id="allChart" class="line-chart-pf"></div>
             <script>
                 var allChartDataColumns = [
-                    ['x', '2016-06-19T15:00:00', '2016-06-19T15:20:00', '2016-06-19T15:25:00', '2016-06-20T01:07:00', '2016-06-20T03:00:00', '2016-06-20T05:00:00'],
+                    ['x', '2016-06-19T15:00:00Z', '2016-06-19T15:20:00Z', '2016-06-19T15:25:00Z', '2016-06-20T01:07:00Z', '2016-06-20T03:00:00Z', '2016-06-20T05:00:00Z'],
                     ['Low risk', 30, 200, 100, 400, 150, 250],
                     ['Neutral', 50, 220, 310, 240, 115, 25],
                     ['Moderate risk', 70, 100, 390, 295, 170, 220],
@@ -108,7 +124,8 @@
                 allChartConfig.bindto = '#allChart';
                 allChartConfig.data = {
                     x: 'x',
-                    xFormat: '%Y-%m-%dT%H:%M:%S',
+                    xFormat: '%Y-%m-%dT%H:%M:%SZ',
+                    type: 'step',
                     columns: allChartDataColumns,
                     colors: {
                         'Low risk': '#006e9c',
@@ -124,7 +141,11 @@
                         tick: {
                             format: '%Y-%m-%d %H:%M',
                             count: 8
-                        }
+                        },
+                        label: 'Time'
+                    },
+                    y: {
+                        label: 'Total flows'
                     }
                 };
                 allChartConfig.point = {
