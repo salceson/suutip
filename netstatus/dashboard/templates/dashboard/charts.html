@@ -66,20 +66,19 @@
         <div class="col-lg-6 col-sm-12">
             <div id="avgDayChart" class="line-chart-pf"></div>
             <script>
-                var avgDayChartDataColumns = [
-                    ['Low risk', 0, 0, 0, 0, 0, 2, 3, 4, 5, 7, 4, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    ['Neutral', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    ['Moderate risk', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    ['High risk', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    ['Total', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                ];
+                var avgDayChartLabels = risk_level_labels.concat(['Total']);
+
+                var avgDayChartData = []; //risks + total
+                for(var i = 0; i <= total_risk_levels; i++) {
+                    avgDayChartData.push([avgDayChartLabels[i], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+                }
 
                 var c3ChartDefaults = $().c3ChartDefaults();
                 var avgDayChartConfig = c3ChartDefaults.getDefaultLineConfig();
                 avgDayChartConfig.bindto = '#avgDayChart';
                 avgDayChartConfig.data = {
-                    columns: avgDayChartDataColumns,
-                    type: 'line',
+                    columns: avgDayChartData,
+                    type: 'area',
                     colors: {
                         'Low risk': '#006e9c',
                         'Neutral': '#3f9c35',
@@ -100,6 +99,23 @@
                     show: false
                 };
                 var avgDayChart = c3.generate(avgDayChartConfig);
+
+                var updateAvgDayChart = function(dataChunk) {
+                    if(dataChunk.length == 0) {
+                        return;
+                    }
+
+                    dataChunk.forEach(function(flow) {
+                        var risk = parseInt(flow.risk);
+                        var date = new Date(flow.date);
+                        var hourIdx = date.getHours() + 1;
+                        avgDayChartData[risk][hourIdx] = avgDayChartData[risk][hourIdx] + 1;
+                        avgDayChartData[total_risk_levels][hourIdx] = avgDayChartData[total_risk_levels][hourIdx] + 1;
+                    });
+                    avgDayChart.load({
+                        columns: avgDayChartData
+                    });
+                }
             </script>
 
         </div>
@@ -126,15 +142,6 @@
                     allChartTotals.push(0);
                 }
                 var allChartTotalFlows = 0;
-
-                //var allChartDataColumns = [
-//                    ['x', '2016-06-19T15:00:00Z', '2016-06-19T15:00:00Z', '2016-06-19T15:25:00Z', '2016-06-20T01:07:00Z', '2016-06-20T03:00:00Z', '2016-06-20T05:00:00Z'],
-//                    ['Low risk', 30, 200, 100, 400, 150, 250],
-//                    ['Neutral', 50, 220, 310, 240, 115, 25],
-//                    ['Moderate risk', 70, 100, 390, 295, 170, 220],
-//                    ['High risk', 10, 340, 30, 290, 35, 20],
-//                    ['Total', 80, 810, 550, 1200, 560, 560]
-//                ];
 
                 var c3ChartDefaults = $().c3ChartDefaults();
                 var allChartConfig = c3ChartDefaults.getDefaultLineConfig();
@@ -208,6 +215,7 @@
                 success: function (data) {
                     flows_data = data;
                     updateAllChart(flows_data);
+                    updateAvgDayChart(flows_data);
 
                     var nextId = start;
                     if(data.length > 0) {
