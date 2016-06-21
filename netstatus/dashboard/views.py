@@ -29,13 +29,13 @@ class FlowSerializer(serializers.HyperlinkedModelSerializer):
 
 class FlowViewSet(viewsets.ModelViewSet):
     serializer_class = FlowSerializer
-    queryset = Flow.objects.all().order_by('date')
+    queryset = Flow.objects.all()
 
     def get_queryset(self):
-        date_since = self.request.query_params.get('since', None)
+        start_with_id = self.request.query_params.get('start', None)
 
-        if date_since is not None and date_since != "":
-            self.queryset = self.queryset.filter(date__gt=date_since)
+        if start_with_id is not None and start_with_id != "":
+            self.queryset = self.queryset.filter(id__gte=start_with_id)
         return self.queryset
 
 
