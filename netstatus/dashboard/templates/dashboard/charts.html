@@ -1,6 +1,11 @@
 {% include 'dashboard/_header.html' %}
 {% load staticfiles %}
 
+<script>
+    var total_risk_levels = 4;
+    var risk_level_labels = ['Neutral', 'Low', 'Moderate', 'High'];
+</script>
+
 <div class="container-fluid container-pf-alt-nav-pf-vertical-alt">
     <div class="page-header">
         <h1>Charts</h1>
@@ -110,14 +115,26 @@
         <div class="col-lg-12 col-sm-12">
             <div id="allChart" class="line-chart-pf"></div>
             <script>
-                var allChartDataColumns = [
-                    ['x', '2016-06-19T15:00:00Z', '2016-06-19T15:20:00Z', '2016-06-19T15:25:00Z', '2016-06-20T01:07:00Z', '2016-06-20T03:00:00Z', '2016-06-20T05:00:00Z'],
-                    ['Low risk', 30, 200, 100, 400, 150, 250],
-                    ['Neutral', 50, 220, 310, 240, 115, 25],
-                    ['Moderate risk', 70, 100, 390, 295, 170, 220],
-                    ['High risk', 10, 340, 30, 290, 35, 20],
-                    ['Total', 80, 810, 550, 1200, 560, 560]
+                var allChartLabels = ['x'].concat(risk_level_labels).concat(['Total']);
+
+                var allChartDataRows = [
+                    allChartLabels
                 ];
+
+                var allChartTotals = [];
+                for(var i = 0; i < total_risk_levels; i++) {
+                    allChartTotals.push(0);
+                }
+                var allChartTotalFlows = 0;
+
+                //var allChartDataColumns = [
+//                    ['x', '2016-06-19T15:00:00Z', '2016-06-19T15:00:00Z', '2016-06-19T15:25:00Z', '2016-06-20T01:07:00Z', '2016-06-20T03:00:00Z', '2016-06-20T05:00:00Z'],
+//                    ['Low risk', 30, 200, 100, 400, 150, 250],
+//                    ['Neutral', 50, 220, 310, 240, 115, 25],
+//                    ['Moderate risk', 70, 100, 390, 295, 170, 220],
+//                    ['High risk', 10, 340, 30, 290, 35, 20],
+//                    ['Total', 80, 810, 550, 1200, 560, 560]
+//                ];
 
                 var c3ChartDefaults = $().c3ChartDefaults();
                 var allChartConfig = c3ChartDefaults.getDefaultLineConfig();
@@ -125,13 +142,13 @@
                 allChartConfig.data = {
                     x: 'x',
                     xFormat: '%Y-%m-%dT%H:%M:%SZ',
-                    type: 'step',
-                    columns: allChartDataColumns,
+                    type: 'area-step',
+                    rows: allChartDataRows,
                     colors: {
-                        'Low risk': '#006e9c',
+                        'Low': '#006e9c',
                         'Neutral': '#3f9c35',
-                        'Moderate risk': '#ec7a08',
-                        'High risk': '#c00',
+                        'Moderate': '#ec7a08',
+                        'High': '#c00',
                         'Total': '#999'
                     }
                 };
@@ -152,11 +169,60 @@
                     show: false
                 };
                 var allChart = c3.generate(allChartConfig);
+
+                var updateAllChart = function(dataChunk) {
+                    if(dataChunk.length == 0) {
+                        return;
+                    }
+
+                    var rowsToAdd = [allChartLabels];
+
+                    dataChunk.forEach(function(flow) {
+                        var risk = parseInt(flow.risk);
+                        allChartTotalFlows += 1;
+                        allChartTotals[risk] = allChartTotals[risk] + 1;
+                        var row = [flow.date].concat(allChartTotals).concat([allChartTotalFlows]);
+                        rowsToAdd.push(row);
+                    });
+                    allChart.flow({
+                        rows: rowsToAdd,
+                        length: 0
+                    });
+                }
             </script>
 
         </div>
     </div>
 
+    <script>
+        var flows_data = {};
+
+        var get_id_from_url = function(url) {
+            var tokens = url.split("/");
+            return parseInt(tokens[tokens.length-2]);
+        };
+
+        var updateData = function(start) {
+            $.ajax({
+                url: '/rest/flows/?start=' + start,
+                success: function (data) {
+                    flows_data = data;
+                    updateAllChart(flows_data);
+
+                    var nextId = start;
+                    if(data.length > 0) {
+                        nextId = get_id_from_url(data[data.length-1].url) + 1;
+                    }
+
+                    setTimeout(function() {
+                        updateData(nextId);
+                    }, 60000);
+                }
+            });
+        };
+
+        updateData(0);
+    </script>
 
 </div>
 {% include 'dashboard/_footer.html' %}
