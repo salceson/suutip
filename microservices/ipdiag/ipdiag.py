@@ -56,17 +56,10 @@ def ip_diagnostics(ip):
     ping_process = Popen(ping_cmd, stdout=PIPE)
     (ping_result, ping_error) = ping_process.communicate()
     ping_exit_code = ping_process.wait()
-    traceroute_cmd = ['traceroute', ip]
-    traceroute_process = Popen(traceroute_cmd, stdout=PIPE)
-    (traceroute_result, traceroute_error) = traceroute_process.communicate()
-    traceroute_exit_code = traceroute_process.wait()
     return jsonify({
         'ping_ok': (ping_exit_code == 0),
         'ping_result': ping_result or '',
-        'ping_error': ping_error or '',
-        'traceroute_ok': (traceroute_exit_code == 0),
-        'traceroute_result': traceroute_result or '',
-        'traceroute_error': traceroute_error or ''
+        'ping_error': ping_error or ''
     })
 
 
