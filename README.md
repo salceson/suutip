@@ -37,7 +37,7 @@ docker run --name s3 --link s1:s1 --link s2:s2 -d -p 5003:5000 service3:latest
 
 NetStatus to mini appka z restowym API. Służy głównie do prezentacji ruchu sieciowego.
 
-Wymagany Python 3 i bower
+Wymagany Python 3 i bower.
 
 Zależności dociągamy poleceniem:
 
@@ -45,7 +45,7 @@ Zależności dociągamy poleceniem:
 pip install -r requirements.txt
 ```
 
-Uruchomienie (bez bowera będzie prakowało zależności):
+Uruchomienie (bez bowera będzie brakowało zależności):
 
 ```
 ./manage.py bower_install
