@@ -14,7 +14,7 @@ import netifaces as ni
 
 
 DOCKER_OVS_BRIDGE = os.environ.get('DOCKER_OVS_BRIDGE', 'obr0')
-DOCKER_OVS_CENTRAL = os.environ.get('DOCKET_OVS_CENTRAL', 'http://10.42.5.1:5000')
+DOCKER_OVS_CENTRAL = os.environ.get('DOCKET_OVS_CENTRAL', 'http://10.42.4.1:5000')
 
 db = shelve.open('docker_ovs.db')
 if 'endpoints' not in db:
