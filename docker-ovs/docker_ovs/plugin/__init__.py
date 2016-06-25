@@ -85,7 +85,7 @@ def net_drv_join():
     hosts_ifs = db['endpoints']
     hosts_ifs[json_request['EndpointID']] = host_if
     db['endpoints'] = hosts_ifs
-    br_inet_addr = nf.ifaddresses(DOCKER_OVS_BRIDGE)[ni.AF_INET]
+    br_inet_addr = ni.ifaddresses(DOCKER_OVS_BRIDGE)[ni.AF_INET]
     gateway_ip = br_inet_addr[0]['addr']
     json_response = {
         'InterfaceName': {
