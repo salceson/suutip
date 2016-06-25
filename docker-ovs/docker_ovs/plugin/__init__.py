@@ -12,7 +12,7 @@ import sys
 from flask import jsonify, request
 
 
-DOCKER_OVS_BRIDGE = os.environ.get('DOCKER_OVS_BRIDGE', 'br1')
+DOCKER_OVS_BRIDGE = os.environ.get('DOCKER_OVS_BRIDGE', 'obr0')
 DOCKER_OVS_CENTRAL = os.environ.get('DOCKET_OVS_CENTRAL', 'http://10.42.5.1:5000')
 
 db = shelve.open('docker_ovs.db')
