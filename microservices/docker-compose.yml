@@ -17,4 +17,5 @@ services:
       - users
 networks:
   default:
-    driver: ovs
+    external:
+      name: suutip
