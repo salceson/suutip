@@ -26,7 +26,7 @@ app.logger.info('Docker Open vSwitch central started')
 def create_network():
     json_request = json.loads(request.data)
     network_id = json_request['NetworkID']
-    gateway_ip = json_request['IPv4Data']['Gateway']
+    gateway_ip = json_request['IPv4Data'][0]['Gateway']
     if network_id not in db['networks']:
         networks = db['networks']
         vlans = db['vlans']
