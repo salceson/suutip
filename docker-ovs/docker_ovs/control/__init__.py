@@ -26,10 +26,11 @@ app.logger.info('Docker Open vSwitch central started')
 def create_network():
     json_request = json.loads(request.data)
     network_id = json_request['NetworkID']
+    gateway_ip = json_request['IPv4Data']['Gateway']
     if network_id not in db['networks']:
         networks = db['networks']
         vlans = db['vlans']
-        networks[network_id] = vlans.pop()
+        networks[network_id] = {'Tag': vlans.pop(), 'Gateway': gateway_ip}
         db['networks'] = networks
         db['vlans'] = vlans
     json_response = {}
@@ -43,7 +44,7 @@ def delete_network():
     if network_id in db['networks']:
         networks = db['networks']
         vlans = db['vlans']
-        vlans.add(networks[network_id])
+        vlans.add(networks[network_id]['Tag'])
         del networks[network_id]
         db['networks'] = networks
         db['vlans'] = vlans
@@ -55,7 +56,5 @@ def delete_network():
 def join():
     json_request = json.loads(request.data)
     network_id = json_request['NetworkID']
-    json_response = {
-        'Tag': db['networks'][network_id],
-    }
+    json_response = db['networks'][network_id]
     return jsonify(json_response)
