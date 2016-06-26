@@ -1,20 +1,20 @@
 version: '2'
 services:
   ipdiag:
-    build: ipdiag
+    image: mkwm/siuu-tip-ipdiag
     ports:
       - '5000'
   users:
-    build: users
+    image: mkwm/siuu-tip-users
     ports:
       - '5000'
   aggregate:
-    build: aggregate
+    image: mkwm/siuu-tip-aggregate
     ports:
       - '5000'
-    links:
-      - ipdiag
-      - users
+    environment:
+      USERS_URL: http://users:5000/
+      IPDIAG_URL: http://ipdiag:5000/
 networks:
   default:
     external:
