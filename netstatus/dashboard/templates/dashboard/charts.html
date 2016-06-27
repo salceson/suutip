@@ -1,0 +1,305 @@
+{% include 'dashboard/_header.html' %}
+{% load staticfiles %}
+
+<script>
+    var total_risk_levels = 4;
+    var risk_level_labels = ['Neutral', 'Low', 'Moderate', 'High'];
+    var colors = {
+        'Low': '#006e9c',
+        'Neutral': '#3f9c35',
+        'Moderate': '#ec7a08',
+        'High': '#c00',
+        'Total': '#999'
+    };
+</script>
+
+<div class="container-fluid container-pf-alt-nav-pf-vertical-alt">
+    <div class="page-header">
+        <h1>Charts</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-sm-12">
+            <h3>Last 10 minutes</h3>
+        </div>
+
+        <div class="col-lg-6 col-sm-12">
+            <h3>New flows by hour of day</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-sm-12">
+            <div id="tenMinChart" class="line-chart-pf"></div>
+            <script>
+                var tenMinChartLabels = ['x'].concat(risk_level_labels).concat(['Total']);
+
+                var tenMinChartDataRows = [
+                    tenMinChartLabels
+                ];
+
+                var tenMinChartInitialized = false;
+
+                var c3ChartDefaults = $().c3ChartDefaults();
+                var tenMinChartConfig = c3ChartDefaults.getDefaultLineConfig();
+                tenMinChartConfig.bindto = '#tenMinChart';
+                tenMinChartConfig.data = {
+                    x: 'x',
+                    xFormat: '%Y-%m-%dT%H:%M:%S.%LZ',
+                    type: 'area',
+                    rows: tenMinChartDataRows,
+                    colors: colors
+                };
+                tenMinChartConfig.axis = {
+                    x: {
+                        type: 'timeseries',
+                        tick: {
+                            format: '%H:%M',
+                            count: 10
+                        },
+                        label: 'New flows / minute'
+                    },
+                    y: {
+                        label: 'Time'
+                    }
+                };
+                tenMinChartConfig.point = {
+                    show: false
+                };
+                var tenMinChart = c3.generate(tenMinChartConfig);
+
+                var updateTenMinChart = function (dataChunk) {
+                    var curDate = new Date();
+                    curDate.setSeconds(0);
+                    curDate.setMilliseconds(0);
+
+                    if (!tenMinChartInitialized) {
+                        var bucketMillis = curDate.valueOf();
+                        var tenMinBuckets = {};
+
+                        for (var i = 0; i < 10; i++) {
+                            bucketMillis -= 60000;
+
+                            var zeros = [];
+                            for (var j = 0; j <= total_risk_levels; j++) {
+                                zeros.push(0);
+                            }
+
+                            tenMinBuckets[bucketMillis] = zeros;
+                        }
+
+                        dataChunk.forEach(function (flow) {
+                            var date = new Date(flow.date);
+                            date.setSeconds(0);
+                            var dateMillis = date.valueOf();
+
+                            if (tenMinBuckets[dateMillis] != undefined) {
+                                var risk = parseInt(flow.risk);
+                                tenMinBuckets[dateMillis][risk] += 1;
+                                tenMinBuckets[dateMillis][total_risk_levels] += 1;
+                            }
+                        });
+
+                        var rowsToAdd = [tenMinChartLabels];
+
+                        for (var millis in tenMinBuckets) {
+                            if (tenMinBuckets.hasOwnProperty(millis)) {
+                                var bucketDate = new Date(parseInt(millis));
+                                var row = [bucketDate.toISOString()].concat(tenMinBuckets[millis]);
+                                rowsToAdd.push(row);
+                            }
+                        }
+
+                        tenMinChart.flow({
+                            rows: rowsToAdd,
+                            length: 0
+                        });
+
+                        tenMinChartInitialized = true;
+                        return;
+                    }
+
+                    var bucket = [];
+                    for (var i = 0; i <= total_risk_levels; i++) {
+                        bucket.push(0);
+                    }
+
+                    dataChunk.forEach(function (flow) {
+                        var risk = parseInt(flow.risk);
+                        bucket[risk] += 1;
+                        bucket[total_risk_levels] += 1;
+                    });
+
+                    var rowsToAdd = [tenMinChartLabels];
+                    var rowToAdd = [curDate.toISOString()].concat(bucket);
+                    rowsToAdd.push(rowToAdd);
+                    tenMinChart.flow({
+                        rows: rowsToAdd,
+                        length: 1
+                    });
+                }
+
+            </script>
+
+        </div>
+
+        <div class="col-lg-6 col-sm-12">
+            <div id="avgDayChart" class="line-chart-pf"></div>
+            <script>
+                var avgDayChartLabels = risk_level_labels.concat(['Total']);
+
+                var avgDayChartData = []; //risks + total
+                for (var i = 0; i <= total_risk_levels; i++) {
+                    avgDayChartData.push([avgDayChartLabels[i], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+                }
+
+                var c3ChartDefaults = $().c3ChartDefaults();
+                var avgDayChartConfig = c3ChartDefaults.getDefaultLineConfig();
+                avgDayChartConfig.bindto = '#avgDayChart';
+                avgDayChartConfig.data = {
+                    columns: avgDayChartData,
+                    type: 'area',
+                    colors: colors
+                };
+                avgDayChartConfig.axis = {
+                    y: {
+                        label: 'New flows'
+                    },
+                    x: {
+                        label: 'Hour of day'
+                    }
+                };
+                avgDayChartConfig.point = {
+                    show: false
+                };
+                var avgDayChart = c3.generate(avgDayChartConfig);
+
+                var updateAvgDayChart = function (dataChunk) {
+                    if (dataChunk.length == 0) {
+                        return;
+                    }
+
+                    dataChunk.forEach(function (flow) {
+                        var risk = parseInt(flow.risk);
+                        var date = new Date(flow.date);
+                        var hourIdx = date.getHours() + 1;
+                        avgDayChartData[risk][hourIdx] += 1;
+                        avgDayChartData[total_risk_levels][hourIdx] += 1;
+                    });
+                    avgDayChart.load({
+                        columns: avgDayChartData
+                    });
+                }
+            </script>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <h3>Full history</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div id="allChart" class="line-chart-pf"></div>
+            <script>
+                var allChartLabels = ['x'].concat(risk_level_labels).concat(['Total']);
+
+                var allChartDataRows = [
+                    allChartLabels
+                ];
+
+                var allChartTotals = [];
+                for (var i = 0; i < total_risk_levels; i++) {
+                    allChartTotals.push(0);
+                }
+                var allChartTotalFlows = 0;
+
+                var c3ChartDefaults = $().c3ChartDefaults();
+                var allChartConfig = c3ChartDefaults.getDefaultLineConfig();
+                allChartConfig.bindto = '#allChart';
+                allChartConfig.data = {
+                    x: 'x',
+                    xFormat: '%Y-%m-%dT%H:%M:%SZ',
+                    type: 'area-step',
+                    rows: allChartDataRows,
+                    colors: colors
+                };
+                allChartConfig.axis = {
+                    x: {
+                        type: 'timeseries',
+                        tick: {
+                            format: '%Y-%m-%d %H:%M',
+                            count: 8
+                        },
+                        label: 'Time'
+                    },
+                    y: {
+                        label: 'Total flows'
+                    }
+                };
+                allChartConfig.point = {
+                    show: false
+                };
+                var allChart = c3.generate(allChartConfig);
+
+                var updateAllChart = function (dataChunk) {
+                    if (dataChunk.length == 0) {
+                        return;
+                    }
+
+                    var rowsToAdd = [allChartLabels];
+
+                    dataChunk.forEach(function (flow) {
+                        var risk = parseInt(flow.risk);
+                        allChartTotalFlows += 1;
+                        allChartTotals[risk] += 1;
+                        var row = [flow.date].concat(allChartTotals).concat([allChartTotalFlows]);
+                        rowsToAdd.push(row);
+                    });
+                    allChart.flow({
+                        rows: rowsToAdd,
+                        length: 0
+                    });
+                }
+            </script>
+
+        </div>
+    </div>
+
+    <script>
+        var flows_data = {};
+
+        var get_id_from_url = function (url) {
+            var tokens = url.split("/");
+            return parseInt(tokens[tokens.length - 2]);
+        };
+
+        var updateData = function (start) {
+            $.ajax({
+                url: '/rest/flows/?start=' + start,
+                success: function (data) {
+                    flows_data = data;
+                    updateAllChart(flows_data);
+                    updateAvgDayChart(flows_data);
+                    updateTenMinChart(flows_data);
+
+                    var nextId = start;
+                    if (data.length > 0) {
+                        nextId = get_id_from_url(data[data.length - 1].url) + 1;
+                    }
+
+                    setTimeout(function () {
+                        updateData(nextId);
+                    }, 60000);
+                }
+            });
+        };
+
+        updateData(0);
+    </script>
+
+</div>
+{% include 'dashboard/_footer.html' %}

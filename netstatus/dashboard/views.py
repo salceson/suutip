@@ -28,10 +28,22 @@ class FlowSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class FlowViewSet(viewsets.ModelViewSet):
-    queryset = Flow.objects.all()
     serializer_class = FlowSerializer
+    queryset = Flow.objects.all()
+
+    def get_queryset(self):
+        start_with_id = self.request.query_params.get('start', None)
+
+        if start_with_id is not None and start_with_id != "":
+            self.queryset = self.queryset.filter(id__gte=start_with_id)
+        return self.queryset
 
 
 class FlowListView(ListView):
     model = Flow
     template_name = 'dashboard/flow_list.html'
+
+
+class Charts(ListView):
+    queryset = Flow.objects.all()
+    template_name='dashboard/charts.html'
