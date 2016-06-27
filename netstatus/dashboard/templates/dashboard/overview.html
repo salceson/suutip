@@ -63,7 +63,7 @@
           </h2>
           <div class="card-pf-body">
             <p class="card-pf-aggregate-status-notifications">
-              <span class="card-pf-aggregate-status-notification"><span class="fa fa-cogs"></span></span>
+              <span class="card-pf-aggregate-status-notification"><span class="fa fa-check-circle-o"></span></span>
             </p>
           </div>
         </div>
@@ -75,7 +75,7 @@
           </h2>
           <div class="card-pf-body">
             <p class="card-pf-aggregate-status-notifications">
-              <span class="card-pf-aggregate-status-notification"><span class="fa fa-cogs"></span></span>
+              <span class="card-pf-aggregate-status-notification"><span class="fa fa-question-circle-o"></span></span>
             </p>
           </div>
         </div>
@@ -87,7 +87,7 @@
           </h2>
           <div class="card-pf-body">
             <p class="card-pf-aggregate-status-notifications">
-              <span class="card-pf-aggregate-status-notification"><span class="fa fa-cogs"></span></span>
+              <span class="card-pf-aggregate-status-notification"><span class="fa fa-exclamation-triangle"></span></span>
             </p>
           </div>
         </div>
@@ -99,7 +99,7 @@
           </h2>
           <div class="card-pf-body">
             <p class="card-pf-aggregate-status-notifications">
-              <span class="card-pf-aggregate-status-notification"><span class="fa fa-cogs"></span></span>
+              <span class="card-pf-aggregate-status-notification"><span class="fa fa-exclamation-circle"></span></span>
             </p>
           </div>
         </div>
@@ -113,12 +113,12 @@
   {% endif %}
   {% if neutral.count %}
   <div class="progress-bar progress-bar-info" style="width:{% widthratio neutral.count object_list.count 100 %}%">
-    <span class="sr-only"></span>Neutral  <span class="fa fa-exclamation-circle"></span>
+    <span class="sr-only"></span>Neutral  <span class="fa fa-question-circle-o"></span>
   </div>
   {% endif %}
   {% if moderate.count %}
   <div class="progress-bar progress-bar-warning" style="width:{% widthratio moderate.count object_list.count 100 %}%">
-    <span class="sr-only"></span>Moderate  <span class="fa fa-cogs"></span>
+    <span class="sr-only"></span>Moderate  <span class="fa fa-exclamation-triangle"></span>
   </div>
   {% endif %}
   {% if high.count %}
