@@ -12,4 +12,4 @@ RUN npm install
 COPY . /usr/src/app
 
 EXPOSE 3001
-CMD [ "bash", "start.sh" ]
+CMD [ "npm", "start", "--", "--release" ]
