@@ -1,0 +1,133 @@
+{% include "dashboard/_header.html" %}
+{% load staticfiles %}
+
+<div class="container-fluid container-pf-alt-nav-pf-vertical-alt">
+<div class="page-header">
+  <h1>NetStatus - Dashboard</h1>
+</div>
+
+  <div class="container-fluid container-cards-pf">
+    <div class="row row-cards-pf">
+      <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="card-pf card-pf-aggregate-status">
+          <h2 class="card-pf-title">
+            <a href="{% url 'flow_list' %}">Total flows:<span class="badge">{{ object_list.count }}</span></a>
+          </h2>
+          <div class="card-pf-body">
+            <p class="card-pf-aggregate-status-notifications">
+              <span class="card-pf-aggregate-status-notification"><span class="fa fa-exchange"></span></span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="card-pf card-pf-aggregate-status card-pf-with-action">
+          <h2 class="card-pf-title">
+            TCP connections:<span class="badge">{{ tcp.count }}</span>
+          </h2>
+          <div class="card-pf-body">
+            <p class="card-pf-aggregate-status-notifications">
+              <span class="card-pf-aggregate-status-notification"><span class="fa fa-exchange"></span></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="card-pf card-pf-aggregate-status card-pf-with-action">
+          <h2 class="card-pf-title">
+            UDP connections:<span class="badge">{{ udp.count }}</span>
+          </h2>
+          <div class="card-pf-body">
+            <p class="card-pf-aggregate-status-notifications">
+              <span class="card-pf-aggregate-status-notification"><span class="fa fa-exchange"></span></span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-3 col-sm-3 col-md-3">
+        <div class="card-pf card-pf-aggregate-status card-pf-with-action">
+          <h2 class="card-pf-title">
+            <span class="label label-success">Neutral: {{ neutral.count }}</span>
+          </h2>
+          <div class="card-pf-body">
+            <p class="card-pf-aggregate-status-notifications">
+              <span class="card-pf-aggregate-status-notification"><span class="fa fa-cogs"></span></span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-3 col-sm-3 col-md-3">
+        <div class="card-pf card-pf-aggregate-status card-pf-with-action">
+          <h2 class="card-pf-title">
+            <span class="label label-info">Low risk: {{ low.count }}</span>
+          </h2>
+          <div class="card-pf-body">
+            <p class="card-pf-aggregate-status-notifications">
+              <span class="card-pf-aggregate-status-notification"><span class="fa fa-cogs"></span></span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-3 col-sm-3 col-md-3">
+        <div class="card-pf card-pf-aggregate-status card-pf-with-action">
+          <h2 class="card-pf-title">
+            <span class="label label-warning">Moderate risk: {{ moderate.count }}</span>
+          </h2>
+          <div class="card-pf-body">
+            <p class="card-pf-aggregate-status-notifications">
+              <span class="card-pf-aggregate-status-notification"><span class="fa fa-cogs"></span></span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-3 col-sm-3 col-md-3">
+        <div class="card-pf card-pf-aggregate-status card-pf-with-action">
+          <h2 class="card-pf-title">
+            <span class="label label-danger">High risk: {{ high.count }}</span>
+          </h2>
+          <div class="card-pf-body">
+            <p class="card-pf-aggregate-status-notifications">
+              <span class="card-pf-aggregate-status-notification"><span class="fa fa-cogs"></span></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div><!-- /row -->
+  <div class="progress">
+  {% if low.count %}
+  <div class="progress-bar progress-bar-success" style="width:{% widthratio neutral.count object_list.count 100 %}%">
+    <span class="sr-only"></span>Neutral  <span class="fa fa-check-circle-o"></span>
+  </div>
+  {% endif %}
+  {% if neutral.count %}
+  <div class="progress-bar progress-bar-info" style="width:{% widthratio low.count object_list.count 100 %}%">
+    <span class="sr-only"></span>Low  <span class="fa fa-exclamation-circle"></span>
+  </div>
+  {% endif %}
+  {% if moderate.count %}
+  <div class="progress-bar progress-bar-warning" style="width:{% widthratio moderate.count object_list.count 100 %}%">
+    <span class="sr-only"></span>Moderate  <span class="fa fa-cogs"></span>
+  </div>
+  {% endif %}
+  {% if high.count %}
+  <div class="progress-bar progress-bar-danger" style="width:{% widthratio high.count object_list.count 100 %}%">
+    <span class="sr-only"></span>High  <span class="fa fa-exclamation-circle"></span>
+  </div>
+  {% endif %}
+</div>
+  </div><!-- /container -->
+  <script src="{% static "matchHeight/jquery.matchHeight-min.js" %}"></script>
+  <script>
+    $(function() {
+      // matchHeight the contents of each .card-pf and then the .card-pf itself
+      $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
+      // initialize tooltips
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+</div>
+
+{% include "dashboard/_footer.html" %}

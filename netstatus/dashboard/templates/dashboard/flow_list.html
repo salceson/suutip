@@ -1,0 +1,43 @@
+{% include 'dashboard/_header.html' %}
+{% load staticfiles %}
+
+<div class="container-fluid container-pf-alt-nav-pf-vertical-alt">
+<div class="page-header">
+  <h1>Flows</h1>
+</div>
+
+<table class="datatable table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>Source IP</th>
+      <th>Destination IP</th>
+      <th>Source port</th>
+      <th>Destination port</th>
+      <th>Protocol</th>
+      <th>Risk</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for ob in object_list %}
+    <tr>
+      <td>{{ ob.source_ip }}</td>
+      <td>{{ ob.target_ip }}</td>
+      <td>{{ ob.source_port }}</td>
+      <td>{{ ob.target_port }}</td>
+      <td>{{ ob.get_protocol_display }}</td>
+      <td>{{ ob.get_risk_display }}</td>
+      <td>{{ ob.date }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<script src="{% static "datatables/media/js/jquery.dataTables.js" %}"></script>
+<script>
+  // Initialize Datatables
+  $(document).ready(function() {
+    $('.datatable').dataTable();
+  });
+</script>
+</div>
+{% include 'dashboard/_footer.html' %}
