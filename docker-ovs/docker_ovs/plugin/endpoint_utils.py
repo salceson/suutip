@@ -12,6 +12,14 @@ def create_endpoint(ovs_bridge, tag):
     ])
     subprocess.check_output(['sudo', 'ip', 'link',
         'set', 'dev', host_if,
+        'mtu', '1400',
+    ])
+    subprocess.check_output(['sudo', 'ip', 'link',
+        'set', 'dev', container_if,
+        'mtu', '1400',
+    ])
+    subprocess.check_output(['sudo', 'ip', 'link',
+        'set', 'dev', host_if,
         'up',
     ])
     subprocess.check_output(['sudo', 'ovs-vsctl',

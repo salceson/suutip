@@ -1,0 +1,24 @@
+@import '../variables.scss';
+
+.root {
+
+}
+
+.container {
+  margin: 0 auto;
+  padding: 0 0 40px;
+  max-width: $max-content-width;
+}
+
+
+.contentContainer {
+  margin-top: 20px;
+}
+
+.contentContainer th, td {
+  text-align: center;
+}
+
+.contentContainer td pre {
+  text-align: left;
+}

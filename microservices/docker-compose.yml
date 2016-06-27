@@ -13,8 +13,16 @@ services:
     ports:
       - '5000'
     environment:
-      USERS_URL: http://users:5000/
-      IPDIAG_URL: http://ipdiag:5000/
+      USERS_URL: http://users:5000
+      IPDIAG_URL: http://ipdiag:5000
+  gui:
+    image: mkwm/siuu-tip-gui
+    ports:
+      - '3001'
+    environment:
+      USERS_URL: /api/users/
+      IPDIAG_URL: /api/ipdiag/
+      AGGREGATE_URL: /api/aggregate/
 networks:
   default:
     external:

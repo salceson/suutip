@@ -7,13 +7,13 @@ db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind
 Base = declarative_base()
 Base.query = db_session.query_property()
 
+from models import *
 
 # noinspection PyUnresolvedReferences
 def init_db():
-    import models
     Base.metadata.create_all(bind=engine)
 
 
 if __name__ == '__main__':
     init_db()
-    db_session.remove()
+
