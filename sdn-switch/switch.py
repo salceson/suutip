@@ -9,7 +9,7 @@ from ryu.controller.handler import set_ev_cls
 from ryu.lib import dpid as dpid_lib
 from ryu.lib import stplib
 from ryu.lib.mac import haddr_to_str
-from ryu.lib.packet import packet, ipv4, tcp, udp
+from ryu.lib.packet import packet, ipv4, tcp, udp, icmp
 from ryu.ofproto import ofproto_v1_0
 
 
@@ -92,10 +92,15 @@ class SimpleSwitchStp(app_manager.RyuApp):
         # Send message to dashboard
         pkt = packet.Packet(array.array('B', ev.msg.data))
         ip4pkt = pkt.get_protocol(ipv4.ipv4)
+        icmppkt = pkt.get_protocol(icmp.icmp)  # type: icmp.icmp
         tcppkt = pkt.get_protocol(tcp.tcp)  # type: tcp.tcp
         udppkt = pkt.get_protocol(udp.udp)  # type: udp.udp
 
-        if tcppkt:
+        if icmppkt:
+            protocol = 1
+            src_port = icmppkt.type_
+            dst_port = icmppkt.code or 0
+        elif tcppkt:
             protocol = 6
             src_port = tcppkt.src_port
             dst_port = tcppkt.dst_port
