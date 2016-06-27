@@ -103,7 +103,7 @@ class SimpleSwitchStp(app_manager.RyuApp):
 
         if arppkt:
             protocol = 0x806
-            src_port = 0
+            src_port = arppkt.opcode
             dst_port = 0
         elif icmppkt:
             protocol = 1
@@ -129,7 +129,7 @@ class SimpleSwitchStp(app_manager.RyuApp):
             src_ip = arppkt.src_ip
             dst_ip = arppkt.dst_ip
         if protocol:
-            self.logger.info('Got flow: %s -> %s' % (src_ip, dst_ip))
+            self.logger.debug('Got flow: %s -> %s' % (src_ip, dst_ip))
             self.send_request_to_dashboard(src_ip, dst_ip, protocol, src_port, dst_port)
 
         actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
@@ -168,7 +168,7 @@ class SimpleSwitchStp(app_manager.RyuApp):
     def send_request_to_dashboard(self, src_ip, dst_ip, protocol, src_port, dst_port):
         try:
             data = {
-                "date": datetime.datetime.now().isoformat(),
+                "date": datetime.datetime.now().replace(microsecond=0).isoformat(),
                 "source_ip": src_ip,
                 "target_ip": dst_ip,
                 "protocol": protocol,
