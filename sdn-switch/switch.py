@@ -1,6 +1,7 @@
 import array
 import datetime
 import struct
+import logging
 
 import requests
 from ryu.base import app_manager
@@ -9,8 +10,11 @@ from ryu.controller.handler import set_ev_cls
 from ryu.lib import dpid as dpid_lib
 from ryu.lib import stplib
 from ryu.lib.mac import haddr_to_str
-from ryu.lib.packet import packet, ipv4, tcp, udp, icmp
+from ryu.lib.packet import packet, ipv4, tcp, udp, icmp, arp
 from ryu.ofproto import ofproto_v1_0
+
+
+logging.getLogger('requests').setLevel(logging.WARNING)
 
 
 # noinspection PyCompatibility,PyBroadException
@@ -92,11 +96,16 @@ class SimpleSwitchStp(app_manager.RyuApp):
         # Send message to dashboard
         pkt = packet.Packet(array.array('B', ev.msg.data))
         ip4pkt = pkt.get_protocol(ipv4.ipv4)
+        arppkt = pkt.get_protocol(arp.arp)  # type: arp.arp
         icmppkt = pkt.get_protocol(icmp.icmp)  # type: icmp.icmp
         tcppkt = pkt.get_protocol(tcp.tcp)  # type: tcp.tcp
         udppkt = pkt.get_protocol(udp.udp)  # type: udp.udp
 
-        if icmppkt:
+        if arppkt:
+            protocol = 0x806
+            src_port = 0
+            dst_port = 0
+        elif icmppkt:
             protocol = 1
             src_port = icmppkt.type
             dst_port = icmppkt.code or 0
@@ -113,9 +122,13 @@ class SimpleSwitchStp(app_manager.RyuApp):
             src_port = None
             dst_port = None
 
-        if ip4pkt and protocol:
+        if ip4pkt:
             src_ip = ip4pkt.src
             dst_ip = ip4pkt.dst
+        elif arppkt:
+            src_ip = arppkt.src_ip
+            dst_ip = arppkt.dst_ip
+        if protocol:
             self.logger.info('Got flow: %s -> %s' % (src_ip, dst_ip))
             self.send_request_to_dashboard(src_ip, dst_ip, protocol, src_port, dst_port)
 
