@@ -98,7 +98,7 @@ class SimpleSwitchStp(app_manager.RyuApp):
 
         if icmppkt:
             protocol = 1
-            src_port = icmppkt.type_
+            src_port = icmppkt.type
             dst_port = icmppkt.code or 0
         elif tcppkt:
             protocol = 6
@@ -163,8 +163,8 @@ class SimpleSwitchStp(app_manager.RyuApp):
                 "target_port": int(dst_port),
                 "risk": 0
             }
-            requests.post('http://127.0.0.1:8000/rest/flows/', json=data)
+            requests.post('http://127.0.0.1:8008/rest/flows/', json=data)
         except requests.RequestException as e:
-            self.logger.error('Request error:', e)
+            self.logger.exception('Request error')
         except Exception as e:
-            self.logger.error('Error:', e)
+            self.logger.exception('Error')
