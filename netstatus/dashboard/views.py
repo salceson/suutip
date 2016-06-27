@@ -11,13 +11,11 @@ class Overview(ListView):
     def get_context_data(self, **kwargs):
         context = super(Overview, self).get_context_data(**kwargs)
 
-        context['tcp'] = Flow.objects.filter(protocol=6)
-        context['udp'] = Flow.objects.filter(protocol=17)
+        for k, v in Flow.PROTOCOLS:
+            context[v.lower()] = Flow.objects.filter(protocol=k)
 
-        context['low'] = Flow.objects.filter(risk=0)
-        context['neutral'] = Flow.objects.filter(risk=1)
-        context['moderate'] = Flow.objects.filter(risk=2)
-        context['high'] = Flow.objects.filter(risk=3)
+        for k, v in Flow.RISKS:
+            context[v] = Flow.objects.filter(risk=k)
 
         return context
 

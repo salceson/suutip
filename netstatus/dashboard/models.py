@@ -4,6 +4,7 @@ from django.db import models
 # Create your models here.
 class Flow(models.Model):
     PROTOCOLS = (
+        (1, 'ICMP'),
         (6, 'TCP'),
         (17, 'UDP'),
     )
