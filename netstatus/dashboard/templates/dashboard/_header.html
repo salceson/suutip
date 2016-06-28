@@ -5,11 +5,12 @@
 <html class="layout-pf-alt layout-pf-alt-fixed layout-pf-alt-fixed-with-footer"><!--<![endif]-->
 <head>
     <meta charset="UTF-8">
-    <title>NetStatus</title>
+    <title>Helicopter View | NetStatus</title>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 
     <link rel="stylesheet" href="{% static "patternfly/dist/css/patternfly.min.css" %}">
     <link rel="stylesheet" href="{% static "patternfly/dist/css/patternfly-additions.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/suutip.css" %}">
 
     <script src="{% static "jquery/dist/jquery.min.js" %}"></script>
     <script src="{% static "bootstrap/dist/js/bootstrap.min.js" %}"></script>
@@ -30,7 +31,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a href="{% url 'overview' %}" class="navbar-brand">
-                <span class="navbar-brand-name">NetStatus</span>
+                <span class="navbar-brand-name"><b>NetStatus</b> Helicopter View</span>
             </a>
         </div>
     </nav>
