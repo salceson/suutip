@@ -20,6 +20,7 @@ containers = {}
 services = {
     '10.10.10.1': 'gateway',
     '10.10.10.254': 'lb',
+    '10.42.4.1': 'dashboard',
 }
 
 def handle_start(container_id):
@@ -91,6 +92,9 @@ def calculate_risk(flow):
         elif dst_srv == 'gui':
             if proto == Protocols.TCP.value and dst_port == 3001: flow.risk = Risks.low.value
             elif proto == Protocols.ARP.value: flow.risk = Risks.low.value
+            else: flow.risk = Risks.high.value
+        elif dst_srv == 'dashboard':
+            if proto == Protocols.TCP.value and dst_port in (8008, 8009): flow.risk = Risks.low.value
             else: flow.risk = Risks.high.value
         elif dst_srv == 'external':
             if proto == Protocols.TCP.value and src_port in (80, 443): flow.risk = Risks.moderate.value
@@ -172,6 +176,11 @@ def calculate_risk(flow):
             #                                                ^- Echo Reply
             else: flow.risk = Risks.high.value
         else: flow.risk = Risks.high.value
+    elif src_srv == 'dashboard':
+        if dst_srv == 'lb':
+            if proto == Protocols.TCP.value and src_port in (8008, 8009): flow.risk = Risks.moderate.value
+            else: flow.risk = Risks.high.value
+        else: flow.risk = Risks.high.value        
     else: flow.risk = Risks.high.value
     flow.save()
 
