@@ -174,7 +174,7 @@ class SimpleSwitchStp(app_manager.RyuApp):
                 "protocol": protocol,
                 "source_port": int(src_port),
                 "target_port": int(dst_port),
-                "risk": 0
+                "risk": -1
             }
             requests.post('http://127.0.0.1:8008/rest/flows/', json=data)
         except requests.RequestException as e:

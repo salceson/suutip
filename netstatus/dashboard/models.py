@@ -21,6 +21,7 @@ class Protocols(ChoiceEnum):
 
 
 class Risks(ChoiceEnum):
+    unrated = -1
     low = 0
     neutral = 1
     moderate = 2

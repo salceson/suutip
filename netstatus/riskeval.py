@@ -145,13 +145,10 @@ def calculate_risk(flow):
     else: flow.risk = Risks.high.value
     flow.save()
 
-last_id = Risks.neutral.value
-
 Flow.objects.update()
 
 while True:
-    for flow in Flow.objects.filter(id__gt=last_id):
+    for flow in Flow.objects.filter(risk=Risks.unrated.value):
         print(flow.id, flow.protocol, flow.source_ip, flow.target_ip)
         calculate_risk(flow)
-        last_id = flow.id
     sleep(5)
