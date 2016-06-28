@@ -6,38 +6,70 @@
   <h1>Flows</h1>
 </div>
 
-<table class="datatable table table-striped table-bordered table-hover">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Source IP</th>
-      <th>Destination IP</th>
-      <th>Protocol</th>
-      <th>Source port</th>
-      <th>Destination port</th>
-      <th>Risk</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for ob in object_list %}
-    <tr class="{% if ob.get_risk_display == "low" %}success{% elif ob.get_risk_display == "netural"%}info{% elif ob.get_risk_display == "moderate"%}warning{% elif ob.get_risk_display == "high"%}danger{% endif %}">
-      <td>{{ ob.date|date:"Y-m-d H:i:s" }}</td>
-      <td>{{ ob.source_ip }}</td>
-      <td>{{ ob.target_ip }}</td>
-      <td>{{ ob.get_protocol_display }}</td>
-      <td>{{ ob.source_port }}</td>
-      <td>{{ ob.target_port }}</td>
-      <td>{{ ob.get_risk_display }}</td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+<div id="flowTable">
+  <table class="datatable table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Source IP</th>
+        <th>Destination IP</th>
+        <th>Protocol</th>
+        <th>Source port</th>
+        <th>Destination port</th>
+        <th>Risk</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+<div id="loading">
+  Loading, please wait...
+</div>
 <script>
   // Initialize Datatables
   $(document).ready(function() {
-    $('.datatable').dataTable({
+    $("#flowTable").hide();
+    var table = $('.datatable').DataTable({
       order: [[0, 'desc']]
     });
+    table.search("{{ search }}");
+    $.ajax("{% url 'flow-list' %}")
+      .done(function(data){
+        $("#loading").remove();
+        $("#flowTable").show();
+        data.forEach(function(flow) {
+          var flowLabels = {
+            '-1': 'unrated',
+            '0': 'low',
+            '1': 'neutral',
+            '2': 'moderate',
+            '3': 'high'
+          };
+          var protocolLabels = {
+            '2054': 'ARP',
+            '1': 'ICMP',
+            '6': 'TCP',
+            '17': 'UDP'
+          };
+          var flowClasses = {
+            '-1': '',
+            '0': 'success',
+            '1': 'info',
+            '2': 'warning',
+            '3': 'danger'
+          };
+          var addedRow = table.row.add([
+            moment(flow.date).tz("Europe/Warsaw").format("YYYY-MM-DD HH:mm:ss"),
+            flow.source_ip,
+            flow.target_ip,
+            protocolLabels[flow.protocol.toString()],
+            flow.source_port.toString(),
+            flow.target_port.toString(),
+            flowLabels[flow.risk.toString()]
+          ]).draw().node();
+          $(addedRow).addClass(flowClasses[flow.risk.toString()]);
+        });
+      });
   });
 </script>
 </div>

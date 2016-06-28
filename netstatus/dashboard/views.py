@@ -1,4 +1,4 @@
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from rest_framework import viewsets, serializers
 
 from dashboard.models import Flow, Protocols, Risks
@@ -40,18 +40,23 @@ class FlowViewSet(viewsets.ModelViewSet):
     queryset = Flow.objects.all()
 
     def get_queryset(self):
-        start_with_id = self.request.query_params.get('start', None)
+        start_with_id = self.request.GET.get('start', None)
 
         if start_with_id is not None and start_with_id != "":
             self.queryset = self.queryset.filter(id__gte=start_with_id)
         return self.queryset
 
 
-class FlowListView(ListView):
-    model = Flow
+class FlowListView(TemplateView):
     template_name = 'dashboard/flow_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(FlowListView, self).get_context_data(**kwargs)
+        search = self.request.GET.get('search', None)
+        context['search'] = '' if not search else search
+        return context
 
 
 class Charts(ListView):
     queryset = Flow.objects.all()
-    template_name='dashboard/charts.html'
+    template_name = 'dashboard/charts.html'
