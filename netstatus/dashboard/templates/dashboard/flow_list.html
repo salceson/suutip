@@ -6,28 +6,28 @@
   <h1>Flows</h1>
 </div>
 
-<table class="datatable table table-striped table-bordered">
+<table class="datatable table table-striped table-bordered table-hover">
   <thead>
     <tr>
+      <th>Date</th>
       <th>Source IP</th>
       <th>Destination IP</th>
       <th>Source port</th>
       <th>Destination port</th>
       <th>Protocol</th>
       <th>Risk</th>
-      <th>Date</th>
     </tr>
   </thead>
   <tbody>
   {% for ob in object_list %}
-    <tr>
+    <tr class="{% if ob.get_risk_display == "low" %}success{% elif ob.get_risk_display == "netural"%}info{% elif ob.get_risk_display == "moderate"%}warning{% elif ob.get_risk_display == "high"%}danger{% endif %}">
+      <td>{{ ob.date|date:"Y-m-d H:i:s" }}</td>
       <td>{{ ob.source_ip }}</td>
       <td>{{ ob.target_ip }}</td>
       <td>{{ ob.source_port }}</td>
       <td>{{ ob.target_port }}</td>
       <td>{{ ob.get_protocol_display }}</td>
       <td>{{ ob.get_risk_display }}</td>
-      <td>{{ ob.date }}</td>
     </tr>
   {% endfor %}
   </tbody>
