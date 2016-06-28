@@ -23,7 +23,7 @@
       <div class="col-xs-3 col-sm-3 col-md-3">
         <div class="card-pf card-pf-aggregate-status card-pf-with-action">
           <h2 class="card-pf-title">
-            Flows with ARP packets:<span class="badge">{{ arp.count }}</span>
+            ARP flows:<span class="badge">{{ arp.count }}</span>
           </h2>
           <div class="card-pf-body">
             <p class="card-pf-aggregate-status-notifications">
@@ -35,7 +35,7 @@
       <div class="col-xs-3 col-sm-3 col-md-3">
         <div class="card-pf card-pf-aggregate-status card-pf-with-action">
           <h2 class="card-pf-title">
-            Flows with ICMP packets:<span class="badge">{{ icmp.count }}</span>
+            ICMP flows:<span class="badge">{{ icmp.count }}</span>
           </h2>
           <div class="card-pf-body">
             <p class="card-pf-aggregate-status-notifications">
@@ -47,7 +47,7 @@
       <div class="col-xs-3 col-sm-3 col-md-3">
         <div class="card-pf card-pf-aggregate-status card-pf-with-action">
           <h2 class="card-pf-title">
-            Flows with TCP packets:<span class="badge">{{ tcp.count }}</span>
+            TCP flows:<span class="badge">{{ tcp.count }}</span>
           </h2>
           <div class="card-pf-body">
             <p class="card-pf-aggregate-status-notifications">
@@ -59,7 +59,7 @@
       <div class="col-xs-3 col-sm-3 col-md-3">
         <div class="card-pf card-pf-aggregate-status card-pf-with-action">
           <h2 class="card-pf-title">
-            Flows with UDP packets:<span class="badge">{{ udp.count }}</span>
+            UDP flows:<span class="badge">{{ udp.count }}</span>
           </h2>
           <div class="card-pf-body">
             <p class="card-pf-aggregate-status-notifications">
@@ -120,22 +120,22 @@
   <div class="progress">
   {% if low.count %}
   <div class="progress-bar progress-bar-success" style="width:{% widthratio low.count object_list.count 100 %}%">
-    <span class="sr-only"></span>Low  <span class="fa fa-check-circle-o"></span>
+    <span class="sr-only">Low</span>
   </div>
   {% endif %}
   {% if neutral.count %}
   <div class="progress-bar progress-bar-info" style="width:{% widthratio neutral.count object_list.count 100 %}%">
-    <span class="sr-only"></span>Neutral  <span class="fa fa-question-circle"></span>
+    <span class="sr-only">Neutral</span>
   </div>
   {% endif %}
   {% if moderate.count %}
   <div class="progress-bar progress-bar-warning" style="width:{% widthratio moderate.count object_list.count 100 %}%">
-    <span class="sr-only"></span>Moderate  <span class="fa fa-exclamation-triangle"></span>
+    <span class="sr-only">Moderate</span>
   </div>
   {% endif %}
   {% if high.count %}
   <div class="progress-bar progress-bar-danger" style="width:{% widthratio high.count object_list.count 100 %}%">
-    <span class="sr-only"></span>High  <span class="fa fa-exclamation-circle"></span>
+    <span class="sr-only">High</span>
   </div>
   {% endif %}
 </div>
