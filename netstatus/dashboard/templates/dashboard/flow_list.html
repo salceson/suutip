@@ -11,8 +11,8 @@
     <thead>
       <tr>
         <th>Date</th>
-        <th>Source IP</th>
-        <th>Destination IP</th>
+        <th>Source</th>
+        <th>Destination</th>
         <th>Protocol</th>
         <th>Source port</th>
         <th>Destination port</th>
@@ -60,8 +60,8 @@
           };
           var addedRow = table.row.add([
             moment(flow.date).tz("Europe/Warsaw").format("YYYY-MM-DD HH:mm:ss"),
-            flow.source_ip,
-            flow.target_ip,
+            flow.source_ip + (flow.source ? (' (' + flow.source + ')') : ''),
+            flow.target_ip + (flow.target ? (' (' + flow.target + ')') : ''),
             protocolLabels[flow.protocol.toString()],
             flow.source_port.toString(),
             flow.target_port.toString(),

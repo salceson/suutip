@@ -32,7 +32,9 @@ class Risks(ChoiceEnum):
 class Flow(models.Model):
     date = models.DateTimeField()
     source_ip = models.GenericIPAddressField()
+    source = models.CharField(max_length=64, blank=True)
     target_ip = models.GenericIPAddressField()
+    target = models.CharField(max_length=64, blank=True)
     protocol = models.SmallIntegerField(choices=Protocols.choices())
     source_port = models.IntegerField()
     target_port = models.IntegerField()

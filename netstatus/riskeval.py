@@ -75,6 +75,8 @@ def calculate_risk(flow):
     dst_port = flow.target_port
     src_srv = services.get(src_ip, 'external')
     dst_srv = services.get(dst_ip, 'external')
+    flow.source = src_srv
+    flow.target = dst_srv
     if src_srv == 'gateway':
         flow.risk = Risks.high.value
     elif src_srv == 'lb':
