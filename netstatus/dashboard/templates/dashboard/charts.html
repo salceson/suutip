@@ -280,11 +280,6 @@
     <script>
         var flows_data = {};
 
-        var get_id_from_url = function (url) {
-            var tokens = url.split("/");
-            return parseInt(tokens[tokens.length - 2]);
-        };
-
         var updateData = function (start) {
             $.ajax({
                 url: '{% url 'flow-list' %}?fields=date,risk&start=' + start,
@@ -296,7 +291,7 @@
 
                     var nextId = start;
                     if (data.length > 0) {
-                        nextId = get_id_from_url(data[data.length - 1].url) + 1;
+                        nextId = data[data.length - 1].id + 1;
                     }
 
                     setTimeout(function () {

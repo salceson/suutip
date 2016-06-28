@@ -33,6 +33,7 @@ class FlowSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Flow
+        fields = ['url'] + [f.name for f in Flow._meta.get_fields()]
 
 
 class FlowViewSet(viewsets.ModelViewSet):
