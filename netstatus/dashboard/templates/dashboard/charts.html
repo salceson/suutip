@@ -2,11 +2,10 @@
 {% load staticfiles %}
 
 <script>
-    var total_risk_levels = 4;
     var risk_level_labels = ['Neutral', 'Low', 'Moderate', 'High'];
     var colors = {
-        'Low': '#006e9c',
-        'Neutral': '#3f9c35',
+        'Low': '#3f9c35',
+        'Neutral': '#006e9c',
         'Moderate': '#ec7a08',
         'High': '#c00',
         'Total': '#999'
@@ -81,7 +80,7 @@
                             bucketMillis -= 60000;
 
                             var zeros = [];
-                            for (var j = 0; j <= total_risk_levels; j++) {
+                            for (var j = 0; j <= risk_level_labels.length; j++) {
                                 zeros.push(0);
                             }
 
@@ -96,7 +95,7 @@
                             if (tenMinBuckets[dateMillis] != undefined) {
                                 var risk = parseInt(flow.risk);
                                 tenMinBuckets[dateMillis][risk] += 1;
-                                tenMinBuckets[dateMillis][total_risk_levels] += 1;
+                                tenMinBuckets[dateMillis][risk_level_labels.length] += 1;
                             }
                         });
 
@@ -120,14 +119,14 @@
                     }
 
                     var bucket = [];
-                    for (var i = 0; i <= total_risk_levels; i++) {
+                    for (var i = 0; i <= risk_level_labels.length; i++) {
                         bucket.push(0);
                     }
 
                     dataChunk.forEach(function (flow) {
                         var risk = parseInt(flow.risk);
                         bucket[risk] += 1;
-                        bucket[total_risk_levels] += 1;
+                        bucket[risk_level_labels.length] += 1;
                     });
 
                     var rowsToAdd = [tenMinChartLabels];
@@ -149,7 +148,7 @@
                 var avgDayChartLabels = risk_level_labels.concat(['Total']);
 
                 var avgDayChartData = []; //risks + total
-                for (var i = 0; i <= total_risk_levels; i++) {
+                for (var i = 0; i <= risk_level_labels.length; i++) {
                     avgDayChartData.push([avgDayChartLabels[i], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
                 }
 
@@ -184,7 +183,7 @@
                         var date = new Date(flow.date);
                         var hourIdx = date.getHours() + 1;
                         avgDayChartData[risk][hourIdx] += 1;
-                        avgDayChartData[total_risk_levels][hourIdx] += 1;
+                        avgDayChartData[risk_level_labels.length][hourIdx] += 1;
                     });
                     avgDayChart.load({
                         columns: avgDayChartData
@@ -212,7 +211,7 @@
                 ];
 
                 var allChartTotals = [];
-                for (var i = 0; i < total_risk_levels; i++) {
+                for (var i = 0; i < risk_level_labels.length; i++) {
                     allChartTotals.push(0);
                 }
                 var allChartTotalFlows = 0;
