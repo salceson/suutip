@@ -5,5 +5,4 @@ WORKDIR /app
 ADD requirements.txt ./
 RUN pip install -r requirements.txt
 ADD *.py ./
-ENTRYPOINT ["python"]
-CMD ["ipdiag.py", "--host", "0.0.0.0"]
+CMD ["python", "ipdiag.py", "--host", "0.0.0.0"]
