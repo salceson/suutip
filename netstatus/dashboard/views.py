@@ -41,11 +41,13 @@ class FlowViewSet(viewsets.ModelViewSet):
     queryset = Flow.objects.all()
 
     def get_queryset(self):
-        start_with_id = self.request.GET.get('start', None)
+        queryset = super(FlowViewSet, self).get_queryset()
 
-        if start_with_id is not None and start_with_id != "":
-            self.queryset = self.queryset.filter(id__gte=start_with_id)
-        return self.queryset
+        start_with_id = self.request.GET.get('start', None)
+        if start_with_id:
+            queryset = queryset.filter(id__gte=start_with_id)
+
+        return queryset
 
 
 class FlowListView(TemplateView):
