@@ -81,8 +81,10 @@ def calculate_risk(flow):
     flow.target = dst_srv
     flow.risk = Risks.neutral.value
     if src_srv == 'gateway':
-        if proto == Protocols.ARP.value and src_port == 2: flow.risk = Risks.low.value
-        #                                               ^- ARP Reply
+        if proto == Protocols.ARP.value and src_port == 2:
+            #                                           ^- ARP Reply
+            if dst_srv == 'ipdiag': flow.risk = Risks.low.value
+            else: flow.risk = Risks.neutral.value
         else: flow.risk = Risks.high.value
     elif src_srv == 'lb':
         if dst_srv in ('ipdiag', 'users', 'aggregate'):
@@ -114,7 +116,7 @@ def calculate_risk(flow):
             #                                                ^- Echo Request
             else: flow.risk = Risks.high.value
         elif dst_srv == 'gateway':
-            if proto == Protocols.ARP.value and src_port == 1: flow.risk = Risks.neutral.value
+            if proto == Protocols.ARP.value and src_port == 1: flow.risk = Risks.low.value
             #                                               ^- ARP Request
             else: flow.risk = Risks.high.value
         else: flow.risk = Risks.high.value
