@@ -96,7 +96,8 @@ def calculate_risk(flow):
             elif proto == Protocols.ARP.value: flow.risk = Risks.low.value
             else: flow.risk = Risks.high.value
         elif dst_srv == 'external':
-            if proto == Protocols.ICMP.value: flow.risk = Risks.moderate.value
+            if proto == Protocols.ICMP.value and src_port == 8: flow.risk = Risks.moderate.value
+            #                                                ^- Echo Request
             else: flow.risk = Risks.high.value
         else: flow.risk = Risks.high.value
     elif src_srv == 'users':
@@ -137,7 +138,8 @@ def calculate_risk(flow):
             if proto == Protocols.TCP.value and dst_port in (80, 443): flow.risk = Risks.moderate.value
             else: flow.risk = Risks.high.value
         elif dst_srv == 'ipdiag':
-            if proto == Protocols.ICMP.value: flow.risk = Risks.moderate.value
+            if proto == Protocols.ICMP.value and src_port == 0: flow.risk = Risks.moderate.value
+            #                                                ^- Echo Reply
             else: flow.risk = Risks.high.value
         else: flow.risk = Risks.high.value
     else: flow.risk = Risks.high.value
