@@ -287,7 +287,7 @@
 
         var updateData = function (start) {
             $.ajax({
-                url: '{% url 'flow-list' %}?start=' + start,
+                url: '{% url 'flow-list' %}?fields=date,risk&start=' + start,
                 success: function (data) {
                     flows_data = data;
                     updateAllChart(flows_data);

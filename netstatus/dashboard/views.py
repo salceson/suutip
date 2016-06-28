@@ -21,6 +21,16 @@ class Overview(ListView):
 
 
 class FlowSerializer(serializers.HyperlinkedModelSerializer):
+    def __init__(self, *args, **kwargs):
+        super(FlowSerializer, self).__init__(*args, **kwargs)
+        fields = self.context['request'].query_params.get('fields')
+        if fields:
+            fields = fields.split(',')
+            wanted = set(fields)
+            existing = set(self.fields.keys())
+            for field in existing - wanted:
+                self.fields.pop(field)
+
     class Meta:
         model = Flow
 
