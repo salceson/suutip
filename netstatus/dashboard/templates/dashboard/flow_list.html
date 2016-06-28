@@ -12,9 +12,9 @@
       <th>Date</th>
       <th>Source IP</th>
       <th>Destination IP</th>
+      <th>Protocol</th>
       <th>Source port</th>
       <th>Destination port</th>
-      <th>Protocol</th>
       <th>Risk</th>
     </tr>
   </thead>
@@ -24,9 +24,9 @@
       <td>{{ ob.date|date:"Y-m-d H:i:s" }}</td>
       <td>{{ ob.source_ip }}</td>
       <td>{{ ob.target_ip }}</td>
+      <td>{{ ob.get_protocol_display }}</td>
       <td>{{ ob.source_port }}</td>
       <td>{{ ob.target_port }}</td>
-      <td>{{ ob.get_protocol_display }}</td>
       <td>{{ ob.get_risk_display }}</td>
     </tr>
   {% endfor %}
@@ -35,7 +35,9 @@
 <script>
   // Initialize Datatables
   $(document).ready(function() {
-    $('.datatable').dataTable();
+    $('.datatable').dataTable({
+      order: [[0, 'desc']]
+    });
   });
 </script>
 </div>
