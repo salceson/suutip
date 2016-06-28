@@ -1,6 +1,5 @@
 {% include "dashboard/_header.html" %}
 {% load staticfiles %}
-{% load progress_bar_helper %}
 
 <div class="container-fluid container-pf-alt-nav-pf-vertical-alt">
 <div class="page-header">
@@ -137,16 +136,24 @@
     </div><!-- /row -->
   <div class="progress">
   {% if low.count %}
-  <div class="progress-bar progress-bar-success" style="width:{% progress_bar_width low.count object_list.count 100 %}%">Low</div>
+  <div class="progress-bar progress-bar-success" style="min-width: 10px; width:{% widthratio low.count object_list.count 100 %}%;">
+    <span class="sr-only">Low</span>
+  </div>
   {% endif %}
   {% if neutral.count %}
-  <div class="progress-bar progress-bar-info" style="width:{% progress_bar_width neutral.count object_list.count 100 %}%">Neutral</div>
+  <div class="progress-bar progress-bar-info" style="min-width: 10px; width:{% widthratio neutral.count object_list.count 100 %}%;">
+    <span class="sr-only">Neutral</span>
+  </div>
   {% endif %}
   {% if moderate.count %}
-  <div class="progress-bar progress-bar-warning" style="width:{% progress_bar_width moderate.count object_list.count 100 %}%">Moderate</div>
+  <div class="progress-bar progress-bar-warning" style="min-width: 10px; width:{% widthratio moderate.count object_list.count 100 %}%;">
+    <span class="sr-only">Moderate</span>
+  </div>
   {% endif %}
   {% if high.count %}
-  <div class="progress-bar progress-bar-danger" style="width:{% progress_bar_width high.count object_list.count 100 %}%">High</div>
+  <div class="progress-bar progress-bar-danger" style="min-width: 10px; width:{% widthratio high.count object_list.count 100 %}%;">
+    <span class="sr-only">High</span>
+  </div>
   {% endif %}
 </div>
   </div><!-- /container -->
@@ -160,6 +167,37 @@
       $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
       // initialize tooltips
       $('[data-toggle="tooltip"]').tooltip();
+      // get width and reset progress bars
+      var getWidthFromElement = function(element) {
+        return parseInt($(element).css("width").split("px")[0]);
+      };
+      var parentWidth = getWidthFromElement($('.progress'));
+      var totalWidth = 0;
+      var widths = [];
+      var objects = [];
+      $('.progress').children().each(function(index){
+        var thisElement = $(this);
+        var width = getWidthFromElement(thisElement);
+        widths[index] = width;
+        objects[index] = thisElement;
+        totalWidth += width;
+      });
+      if (totalWidth !== parentWidth) {
+        var currentMax = 0;
+        var currentMaxElementIndex = null;
+        for (var index in widths) {
+          if (!widths.hasOwnProperty(index)) continue;
+            var width = widths[index];
+            if (width > currentMax) {
+            currentMax = width;
+            currentMaxElementIndex = index;
+          }
+        }
+        widths[currentMaxElementIndex] = currentMax + parentWidth - totalWidth;
+        for (var index in widths) {
+          objects[index].css("width", widths[index] + "px");
+        }
+      }
     });
   </script>
 </div>
