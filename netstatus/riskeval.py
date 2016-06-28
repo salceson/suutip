@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 import sys
 from time import sleep
@@ -77,8 +78,11 @@ def calculate_risk(flow):
     dst_srv = services.get(dst_ip, 'external')
     flow.source = src_srv
     flow.target = dst_srv
+    flow.risk = Risks.neutral.value
     if src_srv == 'gateway':
-        flow.risk = Risks.high.value
+        if proto == Protocols.ARP.value and src_port == 2: flow.risk = Risks.low.value
+        #                                               ^- ARP Reply
+        else: flow.risk = Risks.high.value
     elif src_srv == 'lb':
         if dst_srv in ('ipdiag', 'users', 'aggregate'):
             if proto == Protocols.TCP.value and dst_port == 5000: flow.risk = Risks.low.value
@@ -91,6 +95,10 @@ def calculate_risk(flow):
         elif dst_srv == 'external':
             if proto == Protocols.TCP.value and src_port in (80, 443): flow.risk = Risks.moderate.value
             else: flow.risk = Risks.high.value
+        elif dst_srv == 'gateway':
+            if proto == Protocols.ARP.value and src_port == 1: flow.risk = Risks.neutral.value
+            #                                               ^- ARP Request
+            else: flow.risk = Risks.high.value
         else: flow.risk = Risks.high.value
     elif src_srv == 'ipdiag':
         if dst_srv in ('lb', 'aggregate'):
@@ -100,6 +108,10 @@ def calculate_risk(flow):
         elif dst_srv == 'external':
             if proto == Protocols.ICMP.value and src_port == 8: flow.risk = Risks.moderate.value
             #                                                ^- Echo Request
+            else: flow.risk = Risks.high.value
+        elif dst_srv == 'gateway':
+            if proto == Protocols.ARP.value and src_port == 1: flow.risk = Risks.neutral.value
+            #                                               ^- ARP Request
             else: flow.risk = Risks.high.value
         else: flow.risk = Risks.high.value
     elif src_srv == 'users':
@@ -111,6 +123,10 @@ def calculate_risk(flow):
             if proto == Protocols.TCP.value and dst_port == 5432: flow.risk = Risks.low.value
             elif proto == Protocols.ARP.value: flow.risk = Risks.low.value
             else: flow.risk = Risks.high.value
+        elif dst_srv == 'gateway':
+            if proto == Protocols.ARP.value and src_port == 1: flow.risk = Risks.neutral.value
+            #                                               ^- ARP Request
+            else: flow.risk = Risks.high.value
         else: flow.risk = Risks.high.value
     elif src_srv == 'aggregate':
         if dst_srv == 'lb':
@@ -121,11 +137,19 @@ def calculate_risk(flow):
             if proto == Protocols.TCP.value and dst_port == 5000: flow.risk = Risks.low.value
             elif proto == Protocols.ARP.value: flow.risk = Risks.low.value
             else: flow.risk = Risks.high.value
+        elif dst_srv == 'gateway':
+            if proto == Protocols.ARP.value and src_port == 1: flow.risk = Risks.neutral.value
+            #                                               ^- ARP Request
+            else: flow.risk = Risks.high.value
         else: flow.risk = Risks.high.value
     elif src_srv == 'gui':
         if dst_srv == 'lb':
             if proto == Protocols.TCP.value and src_port == 3001: flow.risk = Risks.low.value
             elif proto == Protocols.ARP.value: flow.risk = Risks.low.value
+            else: flow.risk = Risks.high.value
+        elif dst_srv == 'gateway':
+            if proto == Protocols.ARP.value and src_port == 1: flow.risk = Risks.neutral.value
+            #                                               ^- ARP Request
             else: flow.risk = Risks.high.value
         else: flow.risk = Risks.high.value
     elif src_srv == 'db':
@@ -133,9 +157,13 @@ def calculate_risk(flow):
             if proto == Protocols.TCP.value and src_port == 5432: flow.risk = Risks.low.value
             elif proto == Protocols.ARP.value: flow.risk = Risks.low.value
             else: flow.risk = Risks.high.value
+        elif dst_srv == 'gateway':
+            if proto == Protocols.ARP.value and src_port == 1: flow.risk = Risks.neutral.value
+            #                                               ^- ARP Request
+            else: flow.risk = Risks.high.value
         else: flow.risk = Risks.high.value
     elif src_srv == 'external':
-        if dst_srv == 'gw': flow.risk = Risks.high.value
+        if dst_srv == 'gateway': flow.risk = Risks.high.value
         elif dst_srv == 'lb':
             if proto == Protocols.TCP.value and dst_port in (80, 443): flow.risk = Risks.moderate.value
             else: flow.risk = Risks.high.value
@@ -147,10 +175,11 @@ def calculate_risk(flow):
     else: flow.risk = Risks.high.value
     flow.save()
 
-Flow.objects.update()
-
-while True:
-    for flow in Flow.objects.filter(risk=Risks.unrated.value):
-        print(flow.id, flow.protocol, flow.source_ip, flow.target_ip)
-        calculate_risk(flow)
-    sleep(5)
+try:
+    while True:
+        for flow in Flow.objects.filter(risk=Risks.unrated.value):
+            print(flow.id, flow.protocol, flow.source_ip, flow.target_ip)
+            calculate_risk(flow)
+        sleep(5)
+except KeyboardInterrupt:
+    exit()
