@@ -56,6 +56,7 @@
                             format: '%H:%M',
                             count: 10
                         },
+                        localtime: true,
                         label: 'New flows / minute'
                     },
                     y: {
@@ -68,9 +69,9 @@
                 var tenMinChart = c3.generate(tenMinChartConfig);
 
                 var updateTenMinChart = function (dataChunk) {
-                    var curDate = new Date();
-                    curDate.setSeconds(0);
-                    curDate.setMilliseconds(0);
+                    var curDate = moment().tz("Europe/Warsaw");
+                    curDate.seconds(0);
+                    curDate.milliseconds(0);
 
                     if (!tenMinChartInitialized) {
                         var bucketMillis = curDate.valueOf();
@@ -88,8 +89,8 @@
                         }
 
                         dataChunk.forEach(function (flow) {
-                            var date = new Date(flow.date);
-                            date.setSeconds(0);
+                            var date = moment(flow.date).tz("Europe/Warsaw");
+                            date.seconds(0);
                             var dateMillis = date.valueOf();
 
                             if (tenMinBuckets[dateMillis] != undefined) {
@@ -103,8 +104,8 @@
 
                         for (var millis in tenMinBuckets) {
                             if (tenMinBuckets.hasOwnProperty(millis)) {
-                                var bucketDate = new Date(parseInt(millis));
-                                var row = [bucketDate.toISOString()].concat(tenMinBuckets[millis]);
+                                var bucketDate = moment(parseInt(millis));
+                                var row = [bucketDate.toDate()].concat(tenMinBuckets[millis]);
                                 rowsToAdd.push(row);
                             }
                         }
@@ -130,7 +131,8 @@
                     });
 
                     var rowsToAdd = [tenMinChartLabels];
-                    var rowToAdd = [curDate.toISOString()].concat(bucket);
+                    var rowToAdd = [curDate.toDate()]
+                            .concat(bucket);
                     rowsToAdd.push(rowToAdd);
                     tenMinChart.flow({
                         rows: rowsToAdd,
@@ -145,7 +147,8 @@
         <div class="col-lg-6 col-sm-12">
             <div id="avgDayChart" class="line-chart-pf"></div>
             <script>
-                var avgDayChartLabels = risk_level_labels.concat(['Total']);
+                var avgDayChartLabels = risk_level_labels
+                        .concat(['Total']);
 
                 var avgDayChartData = []; //risks + total
                 for (var i = 0; i <= risk_level_labels.length; i++) {
@@ -165,7 +168,8 @@
                         label: 'New flows'
                     },
                     x: {
-                        label: 'Hour of day'
+                        label: 'Hour of day',
+                        localtime: true
                     }
                 };
                 avgDayChartConfig.point = {
@@ -180,8 +184,8 @@
 
                     dataChunk.forEach(function (flow) {
                         var risk = parseInt(flow.risk);
-                        var date = new Date(flow.date);
-                        var hourIdx = date.getHours() + 1;
+                        var date = moment(flow.date).tz("Europe/Warsaw");
+                        var hourIdx = date.hours() + 1;
                         avgDayChartData[risk][hourIdx] += 1;
                         avgDayChartData[risk_level_labels.length][hourIdx] += 1;
                     });
@@ -204,7 +208,9 @@
         <div class="col-lg-12 col-sm-12">
             <div id="allChart" class="line-chart-pf"></div>
             <script>
-                var allChartLabels = ['x'].concat(risk_level_labels).concat(['Total']);
+                var allChartLabels = ['x']
+                        .concat(risk_level_labels)
+                        .concat(['Total']);
 
                 var allChartDataRows = [
                     allChartLabels
@@ -233,6 +239,7 @@
                             format: '%Y-%m-%d %H:%M',
                             count: 8
                         },
+                        localtime: true,
                         label: 'Time'
                     },
                     y: {
@@ -255,7 +262,9 @@
                         var risk = parseInt(flow.risk);
                         allChartTotalFlows += 1;
                         allChartTotals[risk] += 1;
-                        var row = [flow.date].concat(allChartTotals).concat([allChartTotalFlows]);
+                        var row = [moment(flow.date).tz("Europe/Warsaw").toDate()]
+                                .concat(allChartTotals)
+                                .concat([allChartTotalFlows]);
                         rowsToAdd.push(row);
                     });
                     allChart.flow({
