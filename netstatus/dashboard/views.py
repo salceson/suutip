@@ -1,7 +1,7 @@
 from django.views.generic import ListView
 from rest_framework import viewsets, serializers
 
-from dashboard.models import Flow
+from dashboard.models import Flow, Protocols, Risks
 
 
 class Overview(ListView):
@@ -11,11 +11,11 @@ class Overview(ListView):
     def get_context_data(self, **kwargs):
         context = super(Overview, self).get_context_data(**kwargs)
 
-        for k, v in Flow.PROTOCOLS:
-            context[v.lower()] = Flow.objects.filter(protocol=k)
+        for proto in Protocols:
+            context[proto.name.lower()] = Flow.objects.filter(protocol=proto.value)
 
-        for k, v in Flow.RISKS:
-            context[v] = Flow.objects.filter(risk=k)
+        for risk in Risks:
+            context[risk.name.lower()] = Flow.objects.filter(risk=risk.value)
 
         return context
 
