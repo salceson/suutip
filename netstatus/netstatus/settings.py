@@ -68,6 +68,7 @@ BOWER_INSTALLED_APPS = [
     'moment#2.11.2',
     'moment-timezone#0.5.4',
     'patternfly#3.3.5',
+    'underscore#1.8.3'
 ]
 
 REST_FRAMEWORK = {

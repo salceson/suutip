@@ -257,16 +257,29 @@
                     }
 
                     var rowsToAdd = [allChartLabels];
+                    var flows = [];
 
                     dataChunk.forEach(function (flow) {
                         var risk = parseInt(flow.risk);
+                        if (risk == -1) return;
                         allChartTotalFlows += 1;
                         allChartTotals[risk] += 1;
-                        var row = [moment(flow.date).tz("Europe/Warsaw").toDate()]
+                        var row = [flow.date]
                                 .concat(allChartTotals)
                                 .concat([allChartTotalFlows]);
-                        rowsToAdd.push(row);
+                        flows.push(row);
                     });
+                    var occurrences = {};
+                    for (var i = 0; i < flows.length; i++) {
+                        var row = flows[i];
+                        occurrences[row[0]] = row;
+                    }
+                    for (var key in occurrences) {
+                        if (!occurrences.hasOwnProperty(key)) {
+                            continue;
+                        }
+                        rowsToAdd.push(occurrences[key]);
+                    }
                     allChart.flow({
                         rows: rowsToAdd,
                         length: 0
@@ -278,20 +291,23 @@
     </div>
 
     <script>
-        var flows_data = {};
 
         var updateData = function (start) {
             $.ajax({
                 url: '{% url 'flow-list' %}?fields=id,date,risk&start=' + start,
-                success: function (data) {
-                    flows_data = data;
+                success: function (flows_data) {
+                    flows_data = _.map(flows_data, function (flow) {
+                        flow['date'] = moment(flow['date']).tz('Europe/Warsaw').valueOf();
+                        return flow;
+                    });
+                    flows_data = _.sortBy(flows_data, 'date');
                     updateAllChart(flows_data);
                     updateAvgDayChart(flows_data);
                     updateTenMinChart(flows_data);
 
                     var nextId = start;
-                    if (data.length > 0) {
-                        nextId = data[data.length - 1].id + 1;
+                    if (flows_data.length > 0) {
+                        nextId = _.max(_.pluck(flows_data, 'id')) + 1;
                     }
 
                     setTimeout(function () {

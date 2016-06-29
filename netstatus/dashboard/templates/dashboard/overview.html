@@ -2,204 +2,207 @@
 {% load staticfiles %}
 
 <div class="container-fluid container-pf-alt-nav-pf-vertical-alt">
-<div class="page-header">
-  <h1>Overview</h1>
-</div>
+    <div class="page-header">
+        <h1>Overview</h1>
+    </div>
 
-  <div class="container-fluid container-cards-pf">
-    <div class="row row-cards-pf">
-      <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="card-pf card-pf-aggregate-status">
-          <h2 class="card-pf-title">Total flows:</h2>
-          <div class="card-pf-body">
-            <p class="card-pf-aggregate-status-notifications">
-              <span class="card-pf-aggregate-status-notification">
-                <span class="fa fa-exchange"></span>
-                <a href="{% url 'flow_list' %}">{{ object_list.count }}</a>
-              </span>
-            </p>
-          </div>
+    <div class="container-fluid container-cards-pf">
+        <div class="row row-cards-pf">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="card-pf card-pf-aggregate-status">
+                    <h2 class="card-pf-title">Total flows:</h2>
+                    <div class="card-pf-body">
+                        <p class="card-pf-aggregate-status-notifications">
+                            <span class="card-pf-aggregate-status-notification">
+                                <span class="fa fa-exchange"></span>
+                                <a href="{% url 'flow_list' %}">{{ object_list.count }}</a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3">
+                <div class="card-pf card-pf-aggregate-status card-pf-with-action">
+                    <h2 class="card-pf-title">ARP flows:</h2>
+                    <div class="card-pf-body">
+                        <p class="card-pf-aggregate-status-notifications">
+                            <span class="card-pf-aggregate-status-notification">
+                                <span class="fa fa-exchange"></span>
+                                <a href="{% url 'flow_list' %}?search=ARP">{{ arp.count }}</a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3">
+                <div class="card-pf card-pf-aggregate-status card-pf-with-action">
+                    <h2 class="card-pf-title">ICMP flows:</h2>
+                    <div class="card-pf-body">
+                        <p class="card-pf-aggregate-status-notifications">
+                            <span class="card-pf-aggregate-status-notification">
+                                <span class="fa fa-exchange"></span>
+                                <a href="{% url 'flow_list' %}?search=ICMP">{{ icmp.count }}</a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3">
+                <div class="card-pf card-pf-aggregate-status card-pf-with-action">
+                    <h2 class="card-pf-title">TCP flows:</h2>
+                    <div class="card-pf-body">
+                        <p class="card-pf-aggregate-status-notifications">
+                            <span class="card-pf-aggregate-status-notification">
+                                <span class="fa fa-exchange"></span>
+                                <a href="{% url 'flow_list' %}?search=TCP">{{ tcp.count }}</a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3">
+                <div class="card-pf card-pf-aggregate-status card-pf-with-action">
+                    <h2 class="card-pf-title">UDP flows:</h2>
+                    <div class="card-pf-body">
+                        <p class="card-pf-aggregate-status-notifications">
+                            <span class="card-pf-aggregate-status-notification">
+                                <span class="fa fa-exchange"></span>
+                                <a href="{% url 'flow_list' %}?search=UDP">{{ udp.count }}</a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3">
+                <div class="card-pf card-pf-aggregate-status card-pf-with-action">
+                    <h2 class="card-pf-title">
+                        <span class="text-success">Low risk:</span>
+                    </h2>
+                    <div class="card-pf-body">
+                        <p class="card-pf-aggregate-status-notifications">
+                            <span class="card-pf-aggregate-status-notification">
+                                <span class="fa fa-check-circle-o text-success"></span>
+                                <a href="{% url 'flow_list' %}?search=low">{{ low.count }}</a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3">
+                <div class="card-pf card-pf-aggregate-status card-pf-with-action">
+                    <h2 class="card-pf-title">
+                        <span class="text-info">Neutral:</span>
+                    </h2>
+                    <div class="card-pf-body">
+                        <p class="card-pf-aggregate-status-notifications">
+                            <span class="card-pf-aggregate-status-notification">
+                                <span class="fa fa-question-circle text-info"></span>
+                                <a href="{% url 'flow_list' %}?search=neutral">{{ neutral.count }}</a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3">
+                <div class="card-pf card-pf-aggregate-status card-pf-with-action">
+                    <h2 class="card-pf-title">
+                        <span class="text-warning">Moderate risk:</span>
+                    </h2>
+                    <div class="card-pf-body">
+                        <p class="card-pf-aggregate-status-notifications">
+                            <span class="card-pf-aggregate-status-notification">
+                                <span class="fa fa-exclamation-triangle text-warning"></span>
+                                <a href="{% url 'flow_list' %}?search=moderate">{{ moderate.count }}</a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3">
+                <div class="card-pf card-pf-aggregate-status card-pf-with-action">
+                    <h2 class="card-pf-title">
+                        <span class="text-danger">High risk:</span>
+                    </h2>
+                    <div class="card-pf-body">
+                        <p class="card-pf-aggregate-status-notifications">
+                            <span class="card-pf-aggregate-status-notification">
+                                <span class="fa fa-exclamation-circle text-danger"></span>
+                                <a href="{% url 'flow_list' %}?search=high">{{ high.count }}</a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /row -->
+        <div class="progress">
+            {% if low.count %}
+                <div class="progress-bar progress-bar-success"
+                     style="min-width: 10px; width:{% widthratio low.count object_list.count 100 %}%;">
+                    <span class="sr-only">Low</span>
+                </div>
+            {% endif %}
+            {% if neutral.count %}
+                <div class="progress-bar progress-bar-info"
+                     style="min-width: 10px; width:{% widthratio neutral.count object_list.count 100 %}%;">
+                    <span class="sr-only">Neutral</span>
+                </div>
+            {% endif %}
+            {% if moderate.count %}
+                <div class="progress-bar progress-bar-warning"
+                     style="min-width: 10px; width:{% widthratio moderate.count object_list.count 100 %}%;">
+                    <span class="sr-only">Moderate</span>
+                </div>
+            {% endif %}
+            {% if high.count %}
+                <div class="progress-bar progress-bar-danger"
+                     style="min-width: 10px; width:{% widthratio high.count object_list.count 100 %}%;">
+                    <span class="sr-only">High</span>
+                </div>
+            {% endif %}
         </div>
-      </div>
-      <div class="col-xs-3 col-sm-3 col-md-3">
-        <div class="card-pf card-pf-aggregate-status card-pf-with-action">
-          <h2 class="card-pf-title">ARP flows:</h2>
-          <div class="card-pf-body">
-            <p class="card-pf-aggregate-status-notifications">
-              <span class="card-pf-aggregate-status-notification">
-                <span class="fa fa-exchange"></span>
-                <a href="{% url 'flow_list' %}?search=ARP">{{ arp.count }}</a>
-              </span>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-xs-3 col-sm-3 col-md-3">
-        <div class="card-pf card-pf-aggregate-status card-pf-with-action">
-          <h2 class="card-pf-title">ICMP flows:</h2>
-          <div class="card-pf-body">
-            <p class="card-pf-aggregate-status-notifications">
-              <span class="card-pf-aggregate-status-notification">
-                <span class="fa fa-exchange"></span>
-                <a href="{% url 'flow_list' %}?search=ICMP">{{ icmp.count }}</a>
-              </span>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-xs-3 col-sm-3 col-md-3">
-        <div class="card-pf card-pf-aggregate-status card-pf-with-action">
-          <h2 class="card-pf-title">TCP flows:</h2>
-          <div class="card-pf-body">
-            <p class="card-pf-aggregate-status-notifications">
-              <span class="card-pf-aggregate-status-notification">
-                <span class="fa fa-exchange"></span>
-                <a href="{% url 'flow_list' %}?search=TCP">{{ tcp.count }}</a>
-              </span>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-xs-3 col-sm-3 col-md-3">
-        <div class="card-pf card-pf-aggregate-status card-pf-with-action">
-          <h2 class="card-pf-title">UDP flows:</h2>
-          <div class="card-pf-body">
-            <p class="card-pf-aggregate-status-notifications">
-              <span class="card-pf-aggregate-status-notification">
-                <span class="fa fa-exchange"></span>
-                <a href="{% url 'flow_list' %}?search=UDP">{{ udp.count }}</a>
-              </span>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-xs-3 col-sm-3 col-md-3">
-        <div class="card-pf card-pf-aggregate-status card-pf-with-action">
-          <h2 class="card-pf-title">
-            <span class="text-success">Low risk:</span>
-          </h2>
-          <div class="card-pf-body">
-            <p class="card-pf-aggregate-status-notifications">
-              <span class="card-pf-aggregate-status-notification">
-                <span class="fa fa-check-circle-o text-success"></span>
-                <a href="{% url 'flow_list' %}?search=low">{{ low.count }}</a>
-              </span>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-xs-3 col-sm-3 col-md-3">
-        <div class="card-pf card-pf-aggregate-status card-pf-with-action">
-          <h2 class="card-pf-title">
-            <span class="text-info">Neutral:</span>
-          </h2>
-          <div class="card-pf-body">
-            <p class="card-pf-aggregate-status-notifications">
-              <span class="card-pf-aggregate-status-notification">
-                <span class="fa fa-question-circle text-info"></span>
-                <a href="{% url 'flow_list' %}?search=neutral">{{ neutral.count }}</a>
-              </span>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-xs-3 col-sm-3 col-md-3">
-        <div class="card-pf card-pf-aggregate-status card-pf-with-action">
-          <h2 class="card-pf-title">
-            <span class="text-warning">Moderate risk:</span>
-          </h2>
-          <div class="card-pf-body">
-            <p class="card-pf-aggregate-status-notifications">
-              <span class="card-pf-aggregate-status-notification">
-                <span class="fa fa-exclamation-triangle text-warning"></span>
-                <a href="{% url 'flow_list' %}?search=moderate">{{ moderate.count }}</a>
-              </span>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-xs-3 col-sm-3 col-md-3">
-        <div class="card-pf card-pf-aggregate-status card-pf-with-action">
-          <h2 class="card-pf-title">
-            <span class="text-danger">High risk:</span>
-          </h2>
-          <div class="card-pf-body">
-            <p class="card-pf-aggregate-status-notifications">
-              <span class="card-pf-aggregate-status-notification">
-                <span class="fa fa-exclamation-circle text-danger"></span>
-                <a href="{% url 'flow_list' %}?search=high">{{ high.count }}</a>
-              </span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div><!-- /row -->
-  <div class="progress">
-  {% if low.count %}
-  <div class="progress-bar progress-bar-success" style="min-width: 10px; width:{% widthratio low.count object_list.count 100 %}%;">
-    <span class="sr-only">Low</span>
-  </div>
-  {% endif %}
-  {% if neutral.count %}
-  <div class="progress-bar progress-bar-info" style="min-width: 10px; width:{% widthratio neutral.count object_list.count 100 %}%;">
-    <span class="sr-only">Neutral</span>
-  </div>
-  {% endif %}
-  {% if moderate.count %}
-  <div class="progress-bar progress-bar-warning" style="min-width: 10px; width:{% widthratio moderate.count object_list.count 100 %}%;">
-    <span class="sr-only">Moderate</span>
-  </div>
-  {% endif %}
-  {% if high.count %}
-  <div class="progress-bar progress-bar-danger" style="min-width: 10px; width:{% widthratio high.count object_list.count 100 %}%;">
-    <span class="sr-only">High</span>
-  </div>
-  {% endif %}
+    </div>
 </div>
-  </div><!-- /container -->
-  <script src="{% static "matchHeight/jquery.matchHeight-min.js" %}"></script>
-  <script>
-    $(function() {
-      // matchHeight the contents of each .card-pf and then the .card-pf itself
-      $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
-      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
-      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
-      $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
-      // initialize tooltips
-      $('[data-toggle="tooltip"]').tooltip();
-      // get width and reset progress bars
-      var getWidthFromElement = function(element) {
-        return parseInt($(element).css("width").split("px")[0]);
-      };
-      var parentWidth = getWidthFromElement($('.progress'));
-      var totalWidth = 0;
-      var widths = [];
-      var objects = [];
-      $('.progress').children().each(function(index){
-        var thisElement = $(this);
-        var width = getWidthFromElement(thisElement);
-        widths[index] = width;
-        objects[index] = thisElement;
-        totalWidth += width;
-      });
-      if (totalWidth !== parentWidth) {
-        var currentMax = 0;
-        var currentMaxElementIndex = null;
-        for (var index in widths) {
-          if (!widths.hasOwnProperty(index)) continue;
-            var width = widths[index];
-            if (width > currentMax) {
-            currentMax = width;
-            currentMaxElementIndex = index;
-          }
+<script src="{% static "matchHeight/jquery.matchHeight-min.js" %}"></script>
+<script>
+    $(function () {
+        // matchHeight the contents of each .card-pf and then the .card-pf itself
+        $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
+        $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
+        $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
+        $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
+        // initialize tooltips
+        $('[data-toggle="tooltip"]').tooltip();
+        // get width and reset progress bars
+        var getWidthFromElement = function (element) {
+            return parseInt($(element).css("width").split("px")[0]);
+        };
+        var parentWidth = getWidthFromElement($('.progress'));
+        var totalWidth = 0;
+        var widths = [];
+        var objects = [];
+        $('.progress').children().each(function (index) {
+            var thisElement = $(this);
+            var width = getWidthFromElement(thisElement);
+            widths[index] = width;
+            objects[index] = thisElement;
+            totalWidth += width;
+        });
+        if (totalWidth !== parentWidth) {
+            var currentMax = 0;
+            var currentMaxElementIndex = null;
+            for (var index in widths) {
+                var width = widths[index];
+                if (width > currentMax) {
+                    currentMax = width;
+                    currentMaxElementIndex = index;
+                }
+            }
+            widths[currentMaxElementIndex] = currentMax + parentWidth - totalWidth;
+            for (var index in widths) {
+                objects[index].css("width", widths[index] + "px");
+            }
         }
-        widths[currentMaxElementIndex] = currentMax + parentWidth - totalWidth;
-        for (var index in widths) {
-          objects[index].css("width", widths[index] + "px");
-        }
-      }
     });
-  </script>
-</div>
+</script>
 
 {% include "dashboard/_footer.html" %}
